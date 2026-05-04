@@ -1,0 +1,667 @@
+import { ReactNode, useEffect, useState } from "react";
+import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import Button from "../../components/ui/button/Button";
+import { HardwareIcon, ResetIcon, ScanIcon, ToggleTranIcon, TransferIcon, UploadIcon } from "../../icons";
+import Modals from "../UiElements/Modals";
+import HttpRequest from "../../utility/HttpRequest";
+import Helper from "../../utility/Helper";
+import HardwareForm from "../../components/form/hardware/HardwareForm";
+import Logger from "../../utility/Logger";
+import { HardwareDto } from "../../model/Hardware/HardwareDto";
+import { IdReport } from "../../model/IdReport/IdReport";
+import SignalRService from "../../services/SignalRService";
+import { StatusDto } from "../../model/StatusDto";
+import { HttpMethod } from "../../enum/HttpMethod";
+import { HardwareEndpoint } from "../../endpoint/HardwareEndpoint";
+import { send } from "../../api/api";
+import { useLocation } from "../../context/LocationContext";
+import { BaseTable } from "../UiElements/BaseTable";
+import { useAuth } from "../../context/AuthContext";
+import { FeatureId } from "../../enum/FeatureId";
+import { ActionButton } from "../../model/ActionButton";
+import { BaseForm } from "../UiElements/BaseForm";
+import { FormContent } from "../../model/Form/FormContent";
+import { useToast } from "../../context/ToastContext";
+import { HardwareToast } from "../../model/ToastMessage";
+import Badge from "../../components/ui/badge/Badge";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
+import { HardwareMemAllocForm } from "../../components/form/hardware/HardwareMemAllocForm";
+import { useLoading } from "../../context/LoadingContext";
+import { HardwareComponentForm } from "../../components/form/hardware/HardwareComponentForm";
+import { TranStatusDto } from "../../model/Hardware/TranStatusDto";
+import { FormType } from "../../model/Form/FormProp";
+import { usePopup } from "../../context/PopupContext";
+import { SetTranDto } from "../../model/Hardware/SetTranDto";
+import { usePagination } from "../../context/PaginationContext";
+import { ScpStatus } from "../../model/Hardware/ScpStatus";
+import { CreateHardwareDto } from "../../model/Hardware/CreateHardwareDto";
+
+
+const HEADER = ["Name", "Type", "Mac","Firmware", "IP","Port", "Transction", "Configuration", "Status", "Action"];
+const KEY = ["name", "hardwareTypeDetail", "mac","firmware", "ip","port", "tranStatus"];
+// Hardware Page
+const ID_REPORT_KEY = [ "componentId",'macAddress','port','ip','serialNumber'];
+const ID_REPORT_TABLE_HEADER = ["Id", "Mac", "Port", "Ip","Serial No", "Action"];
+
+
+const Hardware = () => {
+  const { FlashLoading } = useLoading();
+  const {setPagination} = usePagination();
+  const { locationId } = useLocation();
+  const { toggleToast } = useToast();
+  const { filterPermission,token } = useAuth();
+  const { setCreate,setRemove,setUpdate,setConfirmCreate,setConfirmRemove,setConfirmUpdate,setMessage,setInfo  } = usePopup();
+  const [refresh, setRefresh] = useState(false);
+  const toggleRefresh = () => setRefresh(!refresh);
+
+  let ScanTableTemplate: ReactNode;
+
+  const defaultCreateDto: CreateHardwareDto = {
+    scpId: 0,
+    name: "",
+    hardwareType: 0,
+    hardwareTypeDetail: "",
+    mac: "",
+    port: "",
+    ip: "",
+    firmware: "",
+    serialNumber: "",
+    portOne: false,
+    protocolOne: 0,
+    protocolOneDetail: "",
+    baudRateOne: 0,
+    portTwo: false,
+    protocolTwo: 0,
+    protocolTwoDetail: "",
+    baudRateTwo: 0,
+    locationId: 0,
+    isActive: false
+  }
+
+  const defaultDto: HardwareDto = {
+    // Base
+    locationId: locationId,
+    isActive: true,
+
+    // Define
+    name: "",
+    ip: "",
+    serialNumber: "",
+    isUpload: false,
+    isReset: false,
+    hardwareType: 1,
+    hardwareTypeDetail: "",
+    firmware: "",
+    port: "",
+    modules: [],
+    portOne: false,
+    portTwo: false,
+    protocolOne: 0,
+    protocolOneDetail: "",
+    baudRateOne: -1,
+    protocolTwo: 0,
+    protocolTwoDetail: "",
+    baudRateTwo: -1,
+    id: 0,
+    scpId: 0,
+    mac: "",
+    lastSync: new Date()
+  }
+
+  
+
+
+  {/* Modal Handler */ }
+  const [scan, setScan] = useState<boolean>(false)
+  const [form,setForm] = useState<boolean>(false);
+  const [formType,setFormType] = useState<FormType>(FormType.CREATE);
+
+  // Upload Modal
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [uploadMessage, setUploadMessage] = useState<string>("");
+  const handleCloseModal = () => setScan(false);
+
+
+
+  {/* IdReport */ }
+  const [idReportList, setIdReportList] = useState<IdReport[]>([]);
+  const handleAddIdReport = async (data: IdReport) => {
+    setHardwareDto({
+     scpId: data.scpId,
+    name: "",
+    hardwareType: data.hardwareType,
+    hardwareTypeDetail: data.hardwareTypeDescription,
+    mac: data.macAddress,
+    port: data.port,
+    ip: data.ip,
+    firmware: data.firmware,
+    serialNumber: String(data.serialNumber),
+    portOne: false,
+    protocolOne: 0,
+    protocolOneDetail: "",
+    baudRateOne: 0,
+    portTwo: false,
+    protocolTwo: 0,
+    protocolTwoDetail: "",
+    baudRateTwo: 0,
+    locationId: locationId,
+    isActive: false
+    });
+    console.log(data);
+    setScan(false);
+    setForm(true);
+  }
+  const fetchIdReport = async () => {
+    const res = await send.get(HardwareEndpoint.ID_REPORT(locationId));
+    if (res && res.data.data) {
+      setIdReportList(res.data.data);
+    }
+    
+  }
+
+  ScanTableTemplate = (
+    <>
+      <div className="max-h-[70vh] overflow-y-auto hidden-scroll">
+        <Table>
+          {/* Table Header */}
+          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05] bg-white dark:bg-gray-900 sticky top-0 z-10">
+            <TableRow>
+              {ID_REPORT_TABLE_HEADER.map((head: string, i: number) =>
+                <TableCell
+                  key={i}
+                  isHeader
+                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  {head}
+                </TableCell>
+              )}
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+            {idReportList.map((data: any, i: number) => (
+              <TableRow key={i}>
+                {ID_REPORT_KEY.map((key: string, i: number) =>
+                  <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {String(data[key as keyof typeof data])}
+                  </TableCell>
+                )}
+                <TableCell>
+                  <Button onClick={() => handleAddIdReport(data)} size="sm" variant="primary">
+                    Add
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+
+          </TableBody>
+        </Table>
+      </div>
+
+    </>
+  );
+
+
+
+  {/* Hardware Data */ }
+  const [hardwareDto,setHardwareDto] = useState<HardwareDto | CreateHardwareDto>(defaultDto);
+  const [data, setData] = useState<HardwareDto[]>([]);
+  const [status, setStatus] = useState<StatusDto[]>([]);
+  const [tranStatus, setTranStatus] = useState<TranStatusDto[]>([]);
+  const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
+    const res = await send.get(HardwareEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate))
+    if (res && res.data.data) {
+      setData(res.data.data.data);
+      setPagination(res.data.data.page);
+      // Batch set state
+      const newStatuses = res.data.data.data.map((a: HardwareDto) => ({
+        scpId: a.scpId,
+        driverId: a.scpId,
+        status: -1,
+        tamper: -1,
+        ac: -1,
+        batt: -1
+      }));
+
+      const newTranStatuses = res.data.data.data.map((a: HardwareDto) => ({
+        scpId: a.scpId,
+        capacity: 0,
+        oldest: 0,
+        lastReport: 0,
+        lastLog: 0,
+        disabled: 0,
+      }));
+
+      console.log(newStatuses);
+
+      setTranStatus((prev) => [...prev, ...newTranStatuses])
+      setStatus((prev) => [...prev, ...newStatuses]);
+      console.log(res.data.data)
+      // Fetch status for each
+      res.data.data.data.forEach((a: HardwareDto) => {
+        fetchStatus(a.id);
+        fetchTransactionStatus(a.mac);
+      });
+    }
+
+  }
+
+  const setTran = async (data:SetTranDto[]) => {
+    var res = await send.post(HardwareEndpoint.TRAN_RANGE,data);
+    if(Helper.handleToastByResCode(res,HardwareToast.TOGGLE_TRAN,toggleToast)){
+      toggleRefresh();
+    }
+  }
+  const fetchStatus = async (id: number) => {
+    const res = await send.get(HardwareEndpoint.STATUS(id));
+    console.log(res)
+    if (res && res.data.data) {
+      setStatus((prev) => prev.map((a) =>
+        a.scpId == res.data.data.scpId
+          ? {
+            ...a,
+            status: res.data.data.status,
+          }
+          : {
+            ...a
+          }
+      )
+      );
+    }
+  }
+
+  const fetchTransactionStatus = async (mac: string) => {
+    const res = await send.get(HardwareEndpoint.TRAN(mac));
+    if (res && res.data.data) {
+      setTranStatus((prev) => prev.map((a: TranStatusDto) =>
+        a.scpId == res.data.data.scpId ? {
+          ...a,
+        } : {
+          ...a
+        }
+      ))
+    }
+  }
+
+  const resetDevice = async (ScpMac: string) => {
+    const res = await send.post(HardwareEndpoint.RESET(ScpMac))
+    if (Helper.handleToastByResCode(res, HardwareToast.RESET, toggleToast)) {
+      toggleRefresh();
+    }
+  }
+
+  const uploadConfig = async (id: number) => {
+    const res = await send.post(HardwareEndpoint.UPLOAD(id))
+    if (Helper.handleToastByResCode(res, HardwareToast.UPLOAD, toggleToast)) {
+      toggleRefresh();
+    }
+  }
+
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setHardwareDto((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
+
+
+  {/* Handle Action Table*/ }
+  const handleEdit = (data: HardwareDto) => {
+    setFormType(FormType.UPDATE)
+    setHardwareDto({
+      // Base
+      id :data.id,
+      scpId: data.scpId,
+      name: data.name,
+      hardwareType: data.hardwareType,
+      hardwareTypeDetail: data.hardwareTypeDetail,
+      mac: data.mac,
+      ip: data.ip,
+      firmware: data.firmware,
+      port: data.port,
+      modules: data.modules,
+      serialNumber: data.serialNumber,
+      isUpload: data.isUpload,
+      isReset: data.isReset,
+      portOne: data.portOne,
+      portTwo: data.portTwo,
+      protocolOne:data.protocolOne,
+      baudRateOne:data.baudRateOne,
+      protocolOneDetail:data.protocolOneDetail,
+      protocolTwo:data.protocolTwo,
+      protocolTwoDetail:data.protocolTwoDetail,
+      baudRateTwo:data.baudRateTwo,
+      lastSync:new Date(),
+
+      locationId: data.locationId,
+      isActive: true,
+    })
+    setForm(true);
+  }
+
+  const handleRemove = (data: HardwareDto) => {
+    setConfirmRemove(() => async () => {
+      const res = await send.delete(HardwareEndpoint.DELETE(data.id));
+      if(Helper.handleToastByResCode(res,HardwareToast.DELETE,toggleToast)){
+        setHardwareDto(defaultDto)
+        toggleRefresh();
+      }
+    })
+    setRemove(true);
+
+  }
+  const handleInfo = (data:HardwareDto) => {
+    setFormType(FormType.INFO);
+    setHardwareDto(data);
+    setForm(true);
+  }
+  {/* Handle Click */ }
+  const handleClickWithEvent = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(e.currentTarget.name);
+    switch (e.currentTarget.name) {
+      case "add":
+        setFormType(FormType.CREATE);
+        setForm(true);
+        break;
+      case "report":
+        if (select.length == 0) {
+          setMessage("Please select object")
+          setInfo(true);
+        } else {
+          let data:SetTranDto[] = []
+          select.map((a:HardwareDto) => {
+            data.push({
+              macAddress:a.mac,
+              param:1
+            });
+          })
+          setTran(data);
+          
+        }
+        break;
+      case "delete":
+        if (select.length == 0) {
+          setMessage("Please select object")
+          setInfo(true);
+        } else {
+          setConfirmRemove(() => async () => {
+            var data: number[] = [];
+            select.map(async (a: HardwareDto) => {
+              data.push(a.id)
+            })
+            var res = await send.post(HardwareEndpoint.DELETE_RANGE, data)
+            if (Helper.handleToastByResCode(res, HardwareToast.DELETE_RANGE, toggleToast)) {
+              setRemove(false);
+              toggleRefresh();
+            }
+          })
+          setRemove(true);
+        }
+        break;
+      case "update":
+        setConfirmUpdate(() => async () => {
+          const res = await send.put(HardwareEndpoint.UPDATE,hardwareDto);
+          if(Helper.handleToastByResCode(res,HardwareToast.UPDATE,toggleToast)){
+            setForm(false);
+            toggleRefresh();
+            setHardwareDto(defaultDto);
+          }
+        })
+        setUpdate(true);
+        break;
+      case "create":
+        setConfirmCreate(() => async () => {
+          const res = await send.post(HardwareEndpoint.CREATE,hardwareDto);
+          if(Helper.handleToastByResCode(res,HardwareToast.CREATE,toggleToast)){
+            toggleRefresh();
+            setForm(false);
+            setHardwareDto(defaultDto);
+          }
+        })
+        setCreate(true);
+        break;
+      case "type":
+        setForm(true)
+        break;
+      case "scan":
+        setScan(true);
+        fetchIdReport();
+        break;
+      case "close":
+        setForm(false)
+        break;
+      case "reset":
+        if (select.length != 0) {
+          select.map((a: HardwareDto) => {
+            resetDevice(a.mac);
+          })
+
+        } else {
+          alert("No selected object")
+        }
+        break;
+      case "upload":
+        if (select.length != 0) {
+          select.map((a: HardwareDto) => {
+            uploadConfig(a.id);
+          })
+
+        } else {
+          alert("No selected object")
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  {/* checkBox */ }
+  const [select, setSelect] = useState<HardwareDto[]>([]);
+
+
+  {/* UseEffect */ }
+  useEffect(() => {
+    var connection = SignalRService.getConnection(token);
+    connection.on("SCP.STATUS", (status:ScpStatus) => {
+      console.log(status);
+      fetchStatus(status.id);
+
+    });
+
+    connection.on("test",(message:string) => {
+      console.log(message)
+    })
+
+    connection.on("SCP.TRAN", (data: TranStatusDto) => {
+      console.log(data)
+      setTranStatus((prev) => prev.map((a) =>
+        a.scpId == data.scpId
+          ? {
+            ...a,
+            macAddress: data.scpId,
+            capacity: data.capacity,
+            oldest: data.oldest,
+            lastReport: data.lastReport,
+            lastLog: data.lastLog,
+            disabled: data.disabled,
+            status: data.status
+          }
+          : {
+            ...a
+          }
+      )
+      );
+    })
+
+    connection.on("UploadStatus", (message: string, isFinish: boolean) => {
+      setUploadMessage(message);
+      console.log(message);
+      console.log(isFinish)
+      if (isFinish) {
+        setTimeout(() => {
+          setIsUploading(false);
+        }, 500)
+
+      }
+      connection.on("UploadFinish", () => {
+        setIsUploading(false);
+      })
+    });
+
+    connection.on("SCP.ID_REPORT", (IdReports: IdReport[]) => {
+      setIdReportList(IdReports);
+    })
+    //connection.on
+    fetchIdReport();
+    return () => {
+      //SignalRService.stopConnection()
+    };
+  }, [refresh,locationId]);
+
+
+  const actionBtn: ActionButton[] = [
+    {
+      buttonName: "Reset",
+      lable: "reset",
+      icon: <ResetIcon />
+    }, {
+      buttonName: "Upload",
+      lable: "upload",
+      icon: <UploadIcon />
+    },
+    {
+      buttonName: "Transfer",
+      lable: "transfer",
+      icon: <TransferIcon />
+    },{
+      buttonName:"Report Toggle",
+      lable:"report",
+      icon:<ToggleTranIcon/>
+    },
+    {
+      buttonName: "Scan",
+      lable: "scan",
+      icon: <>
+        <ScanIcon className={idReportList.length != 0 ? "animate-ping" : ""} />
+      </>
+    }
+  ];
+  const renderOptional = (data: HardwareDto, statusDto: StatusDto[],index:number) => {
+    console.log(data)
+    console.log(statusDto)
+    console.log(statusDto.find(b => b.scpId == data.scpId)?.status)
+    return [
+      <TableCell key={index} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+        <>
+          {
+            data.isReset == true && statusDto.find(b => b.scpId == data.scpId && b.driverId == data.id)?.status == 0 ?
+              <FlashLoading />
+              :
+              data.isReset == true ?
+                <Badge
+                  variant="solid"
+                  size="sm"
+                  color="error"
+                >
+                  Reset Require
+                </Badge>
+                : data.isUpload == true ?
+                  <Badge
+                    variant="solid"
+                    size="sm"
+                    color="warning"
+                  >
+                    Upload Require
+                  </Badge>
+                  :
+                  <Badge
+                    variant="solid"
+                    size="sm"
+                    color="success"
+                  >
+                    Synced
+                  </Badge>
+          }
+
+        </>
+      </TableCell>,
+      <TableCell key={index+1} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+        {data.isReset || data.isUpload ?
+          <Badge
+            size="sm"
+            color="error"
+          >
+            Error
+          </Badge>
+          :
+          <Badge
+            size="sm"
+            color={
+              statusDto.find(b => b.scpId == data.scpId)?.status == 1
+                ? "success"
+                : statusDto.find(b => b.scpId == data.scpId)?.status == 0
+                  ? "error"
+                  : "warning"
+            }
+          >
+            {statusDto.find(b => b.scpId == data.scpId)?.status == 1 ? "Online" : statusDto.find(b => b.scpId == data.scpId)?.status == 0 ? "Offline" : statusDto.find(b => b.scpId == data.scpId)?.status}
+          </Badge>
+
+        }
+      </TableCell>
+    ]
+  }
+
+  {/* Form */ }
+  const tabContent: FormContent[] = [
+    {
+      icon: <HardwareIcon />,
+      label: "Hardware",
+      content: <HardwareForm handleClick={handleClickWithEvent}  dto={hardwareDto} setDto={setHardwareDto} type={formType} />
+    }, {
+      icon: <HardwareIcon />,
+      label: "Memory Allocate",
+      content: <HardwareMemAllocForm data={hardwareDto} />
+    }, {
+      icon: <HardwareIcon />,
+      label: "Component",
+      content: <HardwareComponentForm data={hardwareDto} />
+    }
+  ];
+
+
+  return (
+    <>
+
+      {/* {select &&ด
+        <Modals header="Hardware Select" body={<SelectDeviceForm setDto={setHardwareType} handleClick={handleClickWithEvent} />} handleClickWithEvent={handleCloseSelectDevice} />
+      } */}
+      {scan &&
+        <Modals header="Host List" body={ScanTableTemplate} handleClickWithEvent={handleCloseModal} />
+      }
+
+      <PageBreadcrumb pageTitle="Hardware" />
+      <div className="space-y-6">
+        {form ?
+          <>
+            <BaseForm tabContent={tabContent} />
+            {/* <HardwareForm handleClickWithEvent={handleClickWithEvent} handleChange={handleChange} data={hardwareDto} isDetail={false} /> */}
+          </>
+
+          :
+          <BaseTable<HardwareDto> refresh={refresh} headers={HEADER} keys={KEY} data={data} onEdit={handleEdit} onRemove={handleRemove} onInfo={handleInfo} onClick={handleClickWithEvent} select={select} setSelect={setSelect} permission={filterPermission(FeatureId.device)} action={actionBtn} renderOptionalComponent={renderOptional} status={status} locationId={locationId} fetchData={fetchData} specialDisplay={[
+            {
+              key: "tranStatus",
+              content: (a, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                <Badge size="sm" color={tranStatus.find(x => x.scpId == a.scpId)?.disabled == 0 && tranStatus.find(x => x.scpId == a.scpId)?.status ? "success" : "error"}>
+                  {tranStatus.find(x => x.scpId == a.scpId)?.status ?? "Unknown"}
+                </Badge>
+              </TableCell>
+            }
+          ]} />
+        }
+      </div>
+    </>
+  );
+}
+
+
+export default Hardware;
