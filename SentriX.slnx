@@ -12,6 +12,9 @@
     <Project Path="SentriX_AmicoAdapter/AmicoAdapter.Domain/AmicoAdapter.Domain.csproj" />
     <Project Path="SentriX_AmicoAdapter/AmicoAdapter.Infrastructure/AmicoAdapter.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/Sentrix_Contract/">
+    <Project Path="Sentrix_Contract/Sentrix.Contract/Sentrix.Contract.csproj" />
+  </Folder>
   <Folder Name="/SentriX_Core/">
     <Project Path="SentriX_Core/Core.Api/Core.Api.csproj" />
     <Project Path="SentriX_Core/Core.Application/Core.Application.csproj" />
