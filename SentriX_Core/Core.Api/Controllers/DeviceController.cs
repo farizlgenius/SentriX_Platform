@@ -16,6 +16,13 @@ namespace Core.Api.Controllers
             return Ok(res);
         }
 
+        [HttpGet("idreport")]
+        public async Task<IActionResult> GetIdReportAsync()
+        {
+            var res = await service.GetIdReportAsync();
+            return Ok(res);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateDeviceDto dto)
         {

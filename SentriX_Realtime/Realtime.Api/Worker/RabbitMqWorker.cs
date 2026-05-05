@@ -22,7 +22,8 @@ public sealed class RabbitMqWorker(IServiceScopeFactory scopeFactory) : Backgrou
                   // Message Broker
                   using var scope = scopeFactory.CreateScope();
                   var factory = scope.ServiceProvider.GetRequiredService<IRabbitMqFactory>();
-                  var handlers = scope.ServiceProvider.GetRequiredService<IRabbitMqHandler>();
+                  // var handlers = scope.ServiceProvider.GetRequiredService<IRabbitMqHandler>();
+                  var notifier = scope.ServiceProvider.GetRequiredService<IUiNotifier>();
                   var connection = await factory.GetConnectionAsync();
                   var channel = await connection.CreateChannelAsync();
 
@@ -46,7 +47,8 @@ public sealed class RabbitMqWorker(IServiceScopeFactory scopeFactory) : Backgrou
                               Console.WriteLine(message.Key);
                               Console.WriteLine(message.Data);
 
-                              await handlers.HandleAsync(message,ct);
+                              // await handlers.HandleAsync(message,ct);
+                              await notifier.SendToTopic(message.Key,message.Data!);
 
                               await channel.BasicAckAsync(ea.DeliveryTag, false);
                         }

@@ -19,4 +19,5 @@ public class ResponseMessage
   public static string PositionInvalid = "Position invalid.";
   public static string DepartmentInvalid = "Department invalid.";
   public static string RoleInvalid = "Role invalid.";
+  public static string Success = "Success.";
 }

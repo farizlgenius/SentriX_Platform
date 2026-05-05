@@ -7,5 +7,6 @@ namespace Core.Api.Controllers
     [ApiController]
     public class ControlController : ControllerBase
     {
+        
     }
 }

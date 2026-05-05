@@ -1,15 +1,17 @@
 using System;
 using System.Diagnostics;
+using System.Net;
 using Core.Application.DTOs;
 using Core.Application.Exceptions;
 using Core.Application.Interfaces;
 using Core.Domain.Constants;
 using Core.Domain.Entities;
 using Core.Domain.Enums;
+using Core.Domain.Events;
 
 namespace Core.Application.Services;
 
-public class DeviceService(IDeviceRepository repo) : IDeviceService
+public class DeviceService(IDeviceRepository repo,IMessagePublisher publisher) : IDeviceService
 {
   public async Task<DeviceDto> CreateAsync(CreateDeviceDto dto)
   {
@@ -41,7 +43,26 @@ public class DeviceService(IDeviceRepository repo) : IDeviceService
       dto.LocationId
       );
 
-    return await repo.CreateAsync(domain);
+    var res = await repo.CreateAsync(domain);
+    
+    // Publish
+    var @event = new CreateDeviceEvent(
+      dto.Name,
+      dto.ComponentId,
+      dto.Mac,
+      dto.SerialNumber,
+      dto.Ip,
+      dto.Port,
+      dto.Fw,
+      dto.Type,
+      dto.SyncedAt,
+      dto.Status,
+      dto.LocationId
+      );
+    
+    await publisher.PublishAsync(MessageConstants.Device.EXCHANGE,MessageConstants.Device.DEVICE_CREATED,@event);
+
+    return res;
   }
 
   public async Task<DeviceDto> DeleteByIdAsync(int id)
@@ -52,7 +73,17 @@ public class DeviceService(IDeviceRepository repo) : IDeviceService
     return await repo.DeleteByIdAsync(id);
   }
 
-  public async Task<PaginationDto<DeviceDto>> GetPaginationByLocationIdAsync(int location, int Page, int PageSize)
+      public async Task<BaseDto> GetIdReportAsync()
+      {
+          await publisher.PublishAsync(MessageConstants.Device.EXCHANGE,MessageConstants.Device.DEVICE_IDREPORT,true);
+          return new BaseDto(
+            HttpStatusCode.OK,
+            ResponseMessage.Success,
+            DateTime.UtcNow
+          );
+      }
+
+      public async Task<PaginationDto<DeviceDto>> GetPaginationByLocationIdAsync(int location, int Page, int PageSize)
   {
     var res = await repo.GetPaginationByLocationIdAsync(location, Page, PageSize);
     return res;

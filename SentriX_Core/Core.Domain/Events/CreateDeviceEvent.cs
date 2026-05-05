@@ -7,7 +7,7 @@ using Core.Domain.Attributes;
 namespace Core.Domain.Events;
 
 [Exchange("device.exchange")]
-[RoutingKey("device.create")]
+[RoutingKey("device.created")]
 public sealed class CreateDeviceEvent : IRabbitMqEvent
 {
       public string Name {get; set;} = string.Empty;

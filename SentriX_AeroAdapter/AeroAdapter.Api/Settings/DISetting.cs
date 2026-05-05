@@ -1,6 +1,7 @@
 using System;
 using AeroAdapter.Api.Middlewares;
 using AeroAdapter.Application.Interfaces;
+using AeroAdapter.Application.Memories;
 using AeroAdapter.Application.Services;
 using AeroAdapter.Infrastructure.Listener;
 using AeroAdapter.Infrastructure.Messaging;
@@ -14,6 +15,9 @@ public class DISetting
 {
       public static void DISettingHelper(WebApplicationBuilder builder)
       {
+            // Others
+            builder.Services.AddSingleton<IdReports>();
+
             // Repo
             builder.Services.AddScoped<IScpRepository,ScpRepository>();
             builder.Services.AddScoped<IWriterRepository,WriterRepository>();

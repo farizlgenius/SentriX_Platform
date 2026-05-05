@@ -14,6 +14,11 @@
 
   <ItemGroup>
     <Folder Include="Constants\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Sentrix_Contract\Sentrix.Contract\Sentrix.Contract.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 using System;
 using AeroAdapter.Application.DTOs;
 using AeroAdapter.Application.Interfaces;
+using AeroAdapter.Application.Memories;
 using AeroAdapter.Domain.Constants;
 using AeroAdapter.Domain.Entities;
 using AeroAdapter.Domain.Enums;
@@ -11,8 +12,9 @@ using Application.Contracts.GeneratedDtos;
 
 namespace AeroAdapter.Application.Services;
 
-public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWriter writer, ISioWriter sioWriter, IMpWriter mpWriter,IMessagePublisher publisher) : IScpService
+public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWriter writer, ISioWriter sioWriter, IMpWriter mpWriter,IMessagePublisher publisher,IdReports reports) : IScpService
 {
+     
       public async Task AssignIpAddressAsync(int ScpId, SCPReplyMessageDto.CC_WEB_CONFIG_NETWORKDto message)
       {
             var mac = await repo.GetMacFromScpIdAsync((short)ScpId);
@@ -56,11 +58,18 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
 
             if (!await repo.IsAnyScpWithMacAsync(UtilitiesHelper.ByteToHexStr(id.mac_addr)))
             {
-                  var status = await repo.AddAsync(id.scp_id,UtilitiesHelper.ByteToHexStr(id.mac_addr));
-                  var dto = new DeviceDto(id.scp_id,UtilitiesHelper.ByteToHexStr(id.mac_addr),id.serial_number.ToString(),$"{id.sft_rev_major}.{id.sft_rev_minor}",string.Empty,DateTime.UtcNow);
-                  await publisher.PublishAsync(MessageConstant.Device.DEVICE_EXCHANGE,MessageConstant.Device.DEVICE_CREATED_KEY,dto);
-                  // Publish broker to create
-                  // Log success
+                  // New Contoller
+                  
+                  IdReport report = new IdReport(
+                        id.scp_id,
+                        id.serial_number.ToString(),
+                        UtilitiesHelper.ByteToHexStr(id.mac_addr),
+                        string.Empty,
+                        0,
+                        $"{id.sft_rev_major}.{id.sft_rev_minor}"
+                        );
+                  
+                  await reports.AddIdReport(report);
             }
             else
             {

@@ -29,6 +29,7 @@ public class DISetting
     // ==========================
     builder.Services.AddScoped<IDeviceService, DeviceService>();
     builder.Services.AddScoped<ICardFormatService, CardFormatService>();
+    builder.Services.AddScoped<IBrokerService,BrokerService>();
 
 
     // ==========================

@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Messaging\" />
+    <Folder Include="UiNotification\" />
+    <Folder Include="UiNotification\DTOS\" />
+    <Folder Include="UiNotification\Interfaces\" />
+  </ItemGroup>
+
 </Project>
