@@ -1,0 +1,64 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "run-aero-adapter",
+      "type": "shell",
+      "command": "dotnet watch --project ./SentriX_AeroAdapter/AeroAdapter.Api",
+      "options": { "env": { "ASPNETCORE_URLS": "https://localhost:5004;http://localhost:5009" } },
+      "isBackground": true,
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run-amico-adapter",
+      "type": "shell",
+      "command": "dotnet watch --project ./SentriX_AmicoAdapter/AmicoAdapter.Api",
+      "options": { "env": { "ASPNETCORE_URLS": "https://localhost:5010;http://localhost:5011" } },
+      "isBackground": true,
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run-core",
+      "type": "shell",
+      "command": "dotnet watch --project ./SentriX_Core/Core.Api",
+      "options": { "env": { "ASPNETCORE_URLS": "https://localhost:5003;http://localhost:5008" } },
+      "isBackground": true,
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run-identity",
+      "type": "shell",
+      "command": "dotnet watch --project ./SentriX_Identity/Identity.Api",
+      "options": { "env": { "ASPNETCORE_URLS": "https://localhost:5001;http://localhost:5006" } },
+      "isBackground": true,
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run-realtime",
+      "type": "shell",
+      "command": "dotnet watch --project ./SentriX_Realtime/Realtime.Api",
+      "options": { "env": { "ASPNETCORE_URLS": "https://localhost:5002;http://localhost:5007" } },
+      "isBackground": true,
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run-gateway",
+      "type": "shell",
+      "command": "dotnet watch --project ./SentriX_Gateway/Gateway.Api",
+      "options": { "env": { "ASPNETCORE_URLS": "https://localhost:5000;http://localhost:5005" } },
+      "isBackground": true,
+      "problemMatcher": "$msCompile"
+    },
+
+    {
+      "label": "run-all-services",
+      "dependsOn": [
+        "run-aero-adapter",
+        "run-core",
+        "run-identity",
+        "run-realtime",
+        "run-gateway"
+      ]
+    }
+  ]
+}

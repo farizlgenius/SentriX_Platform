@@ -80,12 +80,15 @@ app.UseCors("MyGatewayCorsPolicy");
 // app.UseStatusCodePages();
 // builder.Services.AddProblemDetails();
 
+app.UseHttpsRedirection();
+
 
 // ⭐ THIS LINE FIXES 404 BODY PASS-THROUGH
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 
 // ⭐ YARP STREAMS EVERYTHING FROM HERE
