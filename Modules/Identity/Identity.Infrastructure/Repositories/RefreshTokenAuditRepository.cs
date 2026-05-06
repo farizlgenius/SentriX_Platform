@@ -3,8 +3,7 @@ using Identity.Domain.Entities;
 using Identity.Domain.Enums;
 using Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using SentriX.Modules.Identity.Identity.Application.Interfaces;
-using Identity.Contract.Interfaces;
+using Identity.Application.Interfaces;
 
 namespace Identity.Infrastructure.Repositories;
 

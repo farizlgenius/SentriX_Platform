@@ -1,7 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Sentrix.Contract.UiNotification.Interfaces;
 
 namespace Realtime.Api.Hubs;
 

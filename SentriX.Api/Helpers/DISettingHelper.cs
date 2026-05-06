@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using SentriX.Api.Middlewares;
 using SentriX.Modules.Identity.Identity.Application.Interfaces;
 using Identity.Contract.Interfaces;
+using Identity.Application.Interfaces;
 
 namespace SentriX.Api.Helpers;
 

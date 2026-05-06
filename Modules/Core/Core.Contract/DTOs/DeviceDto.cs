@@ -1,5 +1,7 @@
 
 
+using SentriX.BuildingBlock.Enums;
+
 namespace Core.Contract.DTOs;
 
 public record DeviceDto(

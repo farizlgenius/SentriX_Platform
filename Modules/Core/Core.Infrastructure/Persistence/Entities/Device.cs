@@ -1,5 +1,5 @@
 using System;
-using Core.Domain.Enums;
+using SentriX.BuildingBlock.Enums;
 
 namespace Core.Infrastructure.Persistence.Entities;
 
@@ -11,7 +11,7 @@ public sealed class Device : BaseEntity
   public int port { get; set; }
   public string fw { get; set; } = string.Empty;
   public DeviceSyncStatus status { get; set; }
-  public string type { get; set; } = DeviceType.unknown.ToString();
+  public string type { get; set; } = DeviceType.UNKNOWN.ToString();
   public DateTime synced_at { get; set; }
   public string metadata { get; set; } = string.Empty;
 

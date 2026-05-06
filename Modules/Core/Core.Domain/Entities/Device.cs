@@ -1,6 +1,6 @@
 using System;
-using Core.Domain.Enums;
 using Core.Domain.Helpers;
+using SentriX.BuildingBlock.Enums;
 
 namespace Core.Domain.Entities;
 

@@ -1,4 +1,6 @@
 
+using Identity.Application.Interfaces;
+using Identity.Contract.DTOs;
 using Identity.Domain.Constants;
 using Identity.Domain.Entities;
 using Identity.Infrastructure.Persistence;

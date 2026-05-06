@@ -1,12 +1,6 @@
-
-using System.Text;
-using Identity.Api.Helpers;
-using Identity.Api.Middlewares;
-using Identity.Application.Settings;
-using Identity.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using SentriX.Api.Helpers;
+using SentriX.Api.Middlewares;
+using UINotifier.Infrastructure.Hubs;
 
 namespace Identity.Api;
 
@@ -15,6 +9,11 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        // ==========================
+        // Add SignalR
+        // ==========================
+        builder.Services.AddSignalR();
 
         // ==========================
         // Read config from appsetting.json
@@ -94,6 +93,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+        app.MapHub<UiHub>("/uiHubs");
 
         app.Run();
     }

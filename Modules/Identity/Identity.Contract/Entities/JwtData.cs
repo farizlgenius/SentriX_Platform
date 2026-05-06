@@ -1,5 +1,7 @@
 
 
+using Identity.Contract.Interfaces;
+
 namespace Identity.Application.Settings;
 
 public sealed class JwtData : IJwtData

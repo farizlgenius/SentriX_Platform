@@ -6,7 +6,7 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs;
 using Core.Domain.Constants;
 using Core.Domain.Entities;
-using Core.Domain.Events;
+
 
 namespace Core.Application.Services;
 
@@ -43,21 +43,6 @@ public class DeviceService(IDeviceRepository repo) : IDeviceService
       );
 
     var res = await repo.CreateAsync(domain);
-    
-    // Publish
-    var @event = new CreateDeviceEvent(
-      dto.Name,
-      dto.ComponentId,
-      dto.Mac,
-      dto.SerialNumber,
-      dto.Ip,
-      dto.Port,
-      dto.Fw,
-      dto.Type,
-      dto.SyncedAt,
-      dto.Status,
-      dto.LocationId
-      );
     
 
     return res;

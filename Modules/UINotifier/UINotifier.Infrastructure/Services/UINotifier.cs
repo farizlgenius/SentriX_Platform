@@ -1,16 +1,15 @@
 using System;
 using Microsoft.AspNetCore.SignalR;
-using Realtime.Api.Hubs;
-using Realtime.Api.Interfaces;
-using Sentrix.Contract.UiNotification.Interfaces;
+using UINotifier.Contract.Interfaces;
+using UINotifier.Infrastructure.Hubs;
 
 namespace Realtime.Api.Services;
 
-public class UiNotifier : IUiNotifier
+public class UINotifier : IUINotifier
 {
     private readonly IHubContext<UiHub> _hub;
 
-    public UiNotifier(IHubContext<UiHub> hub)
+    public UINotifier(IHubContext<UiHub> hub)
     {
         _hub = hub;
     }

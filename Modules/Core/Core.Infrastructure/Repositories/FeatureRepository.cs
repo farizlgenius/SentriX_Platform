@@ -1,6 +1,6 @@
 using System;
-using Core.Application.DTOs;
 using Core.Application.Interfaces;
+using Core.Contract.DTOs;
 using Core.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,8 +1,8 @@
 using System;
 using System.Text;
-using Identity.Api.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using SentriX.Api.Authentication;
 
 namespace SentriX.Api.Helpers;
 
@@ -69,6 +69,30 @@ public class AuthenticationSettingHelper
 
       options.Events = new JwtBearerEvents
       {
+
+        OnMessageReceived = context =>
+        {
+            // 1️⃣ HTTP requests (negotiate)
+            var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+            {
+                context.Token = authHeader.Substring("Bearer ".Length);
+                return Task.CompletedTask;
+            }
+
+            // 2️⃣ WebSocket requests (SignalR)
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/sentrixHubs") ||
+                 path.StartsWithSegments("/uiHubs")))
+            {
+                context.Token = accessToken;
+            }
+
+            return Task.CompletedTask;
+        },
         OnChallenge = async context =>
     {
       context.HandleResponse(); // stop default 401 page
@@ -96,7 +120,9 @@ public class AuthenticationSettingHelper
         {
           Console.WriteLine("✅ TOKEN VALIDATED");
           return Task.CompletedTask;
-        }
+        },
+
+        
 
 
       };

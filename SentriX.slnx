@@ -25,10 +25,6 @@
     <Project Path="Modules/Identity/Identity.Domain/Identity.Domain.csproj" />
     <Project Path="Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/Modules/Realtime/">
-    <Project Path="Modules/Realtime/Realtime.Api/Realtime.Api.csproj" />
-    <Project Path="Modules/Realtime/Realtime.Contract/Realtime.Contract.csproj" />
-  </Folder>
   <Folder Name="/Modules/UINotifier/">
     <Project Path="Modules/UINotifier/UINotifier.Application/UINotifier.Application.csproj" />
     <Project Path="Modules/UINotifier/UINotifier.Contract/UINotifier.Contract.csproj" />

@@ -1,10 +1,9 @@
 
+using Identity.Application.Interfaces;
+using Identity.Contract.DTOs;
 using Identity.Domain.Constants;
-using Identity.Domain.Entities;
 using Identity.Infrastructure.Persistence;
-using Identity.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
-using SentriX.Modules.Identity.Identity.Application.Interfaces;
 
 
 namespace Identity.Infrastructure.Repositories;

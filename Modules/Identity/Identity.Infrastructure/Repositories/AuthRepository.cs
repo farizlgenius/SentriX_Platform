@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using SentriX.Modules.Identity.Identity.Application.Interfaces;
 
 using Identity.Contract.Interfaces;
+using Identity.Contract.DTOs;
 
 namespace Identity.Infrastructure.Repositories;
 

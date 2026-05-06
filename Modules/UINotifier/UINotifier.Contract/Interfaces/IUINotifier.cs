@@ -1,8 +1,8 @@
 using System;
 
-namespace Realtime.Api.Interfaces;
+namespace UINotifier.Contract.Interfaces;
 
-public interface IUiNotifier
+public interface IUINotifier
 {
       Task SendToTopic(string topic, object payload);
     Task SendToUser(string userId, object payload);

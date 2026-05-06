@@ -9,8 +9,11 @@
   <ItemGroup>
     <Folder Include="Constants/" />
     <Folder Include="Entities/" />
-    <Folder Include="Enums/" />
     <Folder Include="Helpers/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\SentriX.BuildingBlock\SentriX.BuildingBlock.csproj" />
   </ItemGroup>
 
 
