@@ -8,10 +8,10 @@ public sealed class RefreshToken
   public string HashedToken { get; set; } = string.Empty;
   public string UserId { get; set; } = string.Empty;
   public string UserName { get; set; } = string.Empty;
-  public TokenAction Action { get; set; }
+  public string Action { get; set; } = string.Empty;
   public DateTime ExpiredAt { get; set; }
 
-  public RefreshToken(string hash, string userid, string username, TokenAction action, DateTime expire)
+  public RefreshToken(string hash, string userid, string username, string action, DateTime expire)
   {
     this.HashedToken = hash;
     this.UserId = userid;

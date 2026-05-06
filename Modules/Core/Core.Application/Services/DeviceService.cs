@@ -1,18 +1,16 @@
 using System;
 using System.Diagnostics;
 using System.Net;
-using Core.Application.DTOs;
 using Core.Application.Exceptions;
 using Core.Application.Interfaces;
+using Core.Contract.DTOs;
 using Core.Domain.Constants;
 using Core.Domain.Entities;
-using Core.Domain.Enums;
 using Core.Domain.Events;
-using Sentrix.Contract.Messaging.Constants;
 
 namespace Core.Application.Services;
 
-public class DeviceService(IDeviceRepository repo,IMessagePublisher publisher) : IDeviceService
+public class DeviceService(IDeviceRepository repo) : IDeviceService
 {
   public async Task<DeviceDto> CreateAsync(CreateDeviceDto dto)
   {
@@ -61,7 +59,6 @@ public class DeviceService(IDeviceRepository repo,IMessagePublisher publisher) :
       dto.LocationId
       );
     
-    await publisher.PublishAsync(RabbitMqConstants.Device.EXCHANGE,RabbitMqConstants.Device.CREATED,@event);
 
     return res;
   }
@@ -76,12 +73,7 @@ public class DeviceService(IDeviceRepository repo,IMessagePublisher publisher) :
 
       public async Task<BaseDto> GetIdReportAsync()
       {
-          await publisher.PublishAsync(RabbitMqConstants.Device.EXCHANGE,RabbitMqConstants.Device.IDREPORT,true);
-          return new BaseDto(
-            HttpStatusCode.OK,
-            ResponseMessage.Success,
-            DateTime.UtcNow
-          );
+          throw new NotImplementedException();
       }
 
       public async Task<PaginationDto<DeviceDto>> GetPaginationByLocationIdAsync(int location, int Page, int PageSize)

@@ -1,14 +1,13 @@
 using System.Security.Claims;
-using Identity.Api.Helpers;
-using Identity.Application.DTOs;
 using Identity.Application.Helpers;
-using Identity.Application.Interfaces;
-using Identity.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Identity.Api.Controllers
+using Identity.Contract.Interfaces;
+using Identity.Contract.DTOs;
+
+namespace SentriX.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -17,7 +16,17 @@ namespace Identity.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromForm] LoginDto dto)
         {
-            var token = await service.LoginAsync(dto, Response);
+            var token = await service.LoginAsync(dto);
+
+            Response.Cookies.Append("refresh_token", token.RefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                // Path = "/api/Auth",
+                Expires = new DateTimeOffset(token.RefreshExpiredAt, TimeSpan.Zero)
+            });
+
             return Ok(token);
         }
 
@@ -29,12 +38,28 @@ namespace Identity.Api.Controllers
             {
                 string? refreshToken;
                 Request.Cookies.TryGetValue("refresh_token", out refreshToken);
-                var result = await service.RefreshTokenAsync(refreshToken ?? "", Response);
+                var result = await service.RefreshTokenAsync(refreshToken ?? "");
+                 Response.Cookies.Append("refresh_token", result.RefreshToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    // Path = "/api/Auth",
+                    Expires = new DateTimeOffset(result.RefreshExpiredAt, TimeSpan.Zero)
+                });
                 return Ok(result);
             }
             else
             {
-                var result = await service.RefreshTokenAsync(dto.Refresh, Response);
+                var result = await service.RefreshTokenAsync(dto.Refresh);
+                Response.Cookies.Append("refresh_token", result.RefreshToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    // Path = "/api/Auth",
+                    Expires = new DateTimeOffset(result.RefreshExpiredAt, TimeSpan.Zero)
+                });
                 return Ok(result);
             }
         }
@@ -47,12 +72,26 @@ namespace Identity.Api.Controllers
             {
                 string? refreshToken;
                 Request.Cookies.TryGetValue("refresh_token", out refreshToken);
-                var result = await service.LogoutAsync(refreshToken ?? "", Response);
+                var result = await service.LogoutAsync(refreshToken ?? "");
+                Response.Cookies.Delete("refresh_token", new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    // Path = "/api/Auth"
+                });
                 return Ok(result);
             }
             else
             {
-                var result = await service.LogoutAsync(dto.Refresh, Response);
+                var result = await service.LogoutAsync(dto.Refresh);
+                Response.Cookies.Delete("refresh_token", new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    // Path = "/api/Auth"
+                });
                 return Ok(result);
             }
         }

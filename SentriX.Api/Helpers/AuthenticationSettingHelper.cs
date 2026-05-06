@@ -1,11 +1,10 @@
 using System;
 using System.Text;
 using Identity.Api.Authentication;
-using Identity.Application.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Identity.Api.Helpers;
+namespace SentriX.Api.Helpers;
 
 public class AuthenticationSettingHelper
 {

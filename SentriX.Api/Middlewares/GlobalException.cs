@@ -1,11 +1,9 @@
 using System;
 using System.Net;
-using Identity.Application.DTOs;
-using Identity.Application.Exceptions;
-using Identity.Domain.Constants;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using SentriX.BuildingBlock.DTOs;
+using SentriX.BuildingBlock.Exceptions;
 
-namespace Identity.Api.Middlewares;
+namespace SentriX.Api.Middlewares;
 
 public sealed class GlobalException : IMiddleware
 {

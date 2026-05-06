@@ -1,9 +1,10 @@
 using System;
-using Identity.Domain.Entities;
+using Identity.Contract.DTOs;
+
 
 namespace Identity.Application.Interfaces;
 
 public interface IApiKeyRepository
 {
-  Task<ApiKey> ValidateApiKeyAsync(string apiKey);
+  Task<ApiKeyDto> ValidateApiKeyAsync(string apiKey);
 }

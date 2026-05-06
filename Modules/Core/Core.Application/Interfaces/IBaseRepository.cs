@@ -1,5 +1,5 @@
 using System;
-using Core.Application.DTOs;
+using Core.Contract.DTOs;
 
 namespace Core.Application.Interfaces;
 

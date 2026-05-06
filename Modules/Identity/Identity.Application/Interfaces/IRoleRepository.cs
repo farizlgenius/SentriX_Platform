@@ -1,6 +1,7 @@
-using System;
-using Identity.Application.DTOs;
+
 using Identity.Domain.Entities;
+using Identity.Contract.DTOs;
+
 
 namespace Identity.Application.Interfaces;
 

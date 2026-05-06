@@ -1,17 +1,17 @@
-using System;
-using System.Data.Common;
-using Identity.Application.DTOs;
-using Identity.Application.Interfaces;
+
 using Identity.Domain.Constants;
+using Identity.Domain.Entities;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
+using SentriX.Modules.Identity.Identity.Application.Interfaces;
+
 
 namespace Identity.Infrastructure.Repositories;
 
 public sealed class SettingRepository(AppDbContext context) : ISettingRepository
 {
-      public async Task<PasswordRuleDto> CreatePasswordRuleAsync(PasswordRuleDto dto)
+      public async Task<PasswordRuleDto> CreatePasswordRuleAsync(Identity.Domain.Entities.PasswordRule dto)
       {
             var entity = await context.PasswordRules.FirstOrDefaultAsync();
             if(entity == null)

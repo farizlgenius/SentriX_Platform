@@ -1,12 +1,12 @@
 using System;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using Identity.Api.Helpers;
-using Identity.Application.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
+using SentriX.Api.Helpers;
+using Identity.Contract.Interfaces;
 
-namespace Identity.Api.Authentication;
+namespace SentriX.Api.Authentication;
 
 public class ApiKeyAuthenticationOptions : AuthenticationSchemeOptions { }
 public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
@@ -36,7 +36,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
       return AuthenticateResult.Fail("Invalid API Key");
     }
 
-    if (apiKey.ExpireAt < DateTime.UtcNow)
+    if (apiKey.ExpiredAt < DateTime.UtcNow)
     {
       Context.Items["AuthError"] = "API Key has expired";
       return AuthenticateResult.Fail("API Key expired");

@@ -1,16 +1,17 @@
-using System;
-using System.Net;
-using Identity.Application.DTOs;
-using Identity.Application.Exceptions;
+
 using Identity.Application.Helpers;
-using Identity.Application.Interfaces;
 using Identity.Domain.Constants;
 using Identity.Domain.Entities;
+using SentriX.BuildingBlock.Exceptions;
+using SentriX.Modules.Identity.Identity.Application.Interfaces;
+
+using Identity.Contract.Interfaces;
+using Identity.Contract.DTOs;
 
 
 namespace Identity.Application.Services;
 
-public class LocationService(ILocationRepository repo) : ILocationService
+public class LocationService(Interfaces.ILocationRepository repo) : ILocationService
 {
 
 

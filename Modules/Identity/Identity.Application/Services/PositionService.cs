@@ -1,8 +1,10 @@
-using System;
-using Identity.Application.DTOs;
-using Identity.Application.Exceptions;
-using Identity.Application.Interfaces;
+
 using Identity.Domain.Constants;
+using SentriX.BuildingBlock.Exceptions;
+
+using Identity.Contract.Interfaces;
+using Identity.Contract.DTOs;
+using Identity.Application.Interfaces;
 
 namespace Identity.Application.Services;
 

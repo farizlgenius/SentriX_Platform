@@ -1,12 +1,11 @@
-using System;
-using System.Text;
-using Identity.Application.DTOs;
-using Identity.Application.Exceptions;
-using Identity.Application.Interfaces;
+
 using Identity.Domain.Constants;
 using Identity.Domain.Entities;
 using Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using SentriX.BuildingBlock.Exceptions;
+using SentriX.Modules.Identity.Identity.Application.Interfaces;
+
 
 namespace Identity.Infrastructure.Repositories;
 

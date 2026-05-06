@@ -1,6 +1,6 @@
 using System;
 using System.Text.Json;
-using Identity.Application.Interfaces;
+using Identity.Contract.Interfaces;
 using StackExchange.Redis;
 
 namespace Identity.Infrastructure.Cache;

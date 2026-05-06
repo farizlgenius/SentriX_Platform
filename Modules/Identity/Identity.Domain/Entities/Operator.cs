@@ -10,11 +10,11 @@ public sealed class Operator
   public string OperatorId { get; private set; } = string.Empty;
   public string Username { get; private set; } = string.Empty;
   public string Password { get; private set; } = string.Empty;
-  public Title Title { get; private set; } = Title.Other;
+  public string Title { get; private set; } = string.Empty;
   public string FirstName { get; private set; } = string.Empty;
   public string MiddleName { get; private set; } = string.Empty;
   public string LastName { get; private set; } = string.Empty;
-  public Gender Gender { get; private set; } = Gender.Male;
+  public string Gender { get; private set; } = string.Empty;
   public string Email { get; private set; } = string.Empty;
   public string Mobile { get; private set; } = string.Empty;
   public int RoleId { get; private set; }
@@ -22,7 +22,7 @@ public sealed class Operator
 
   public Operator() { }
 
-  public Operator(string operatorid, string username, string password, Title title, string firstName, string middleName, string lastName, Gender gender, string email, string mobile, List<int> locationId, int roleId)
+  public Operator(string operatorid, string username, string password, string title, string firstName, string middleName, string lastName, string gender, string email, string mobile, List<int> locationId, int roleId)
   {
     ValidationHelper.ValidateNotNullOrEmpty(operatorid, nameof(operatorid));
     ValidationHelper.ValidateNotNullOrEmpty(username, nameof(username));
@@ -45,7 +45,7 @@ public sealed class Operator
     RoleId = roleId;
   }
 
-  public Operator(int id, string userid, string username, Title title, string firstName, string middleName, string lastName, Gender gender, string email, string mobile, List<int> locationId, int roleId)
+  public Operator(int id, string userid, string username, string title, string firstName, string middleName, string lastName, string gender, string email, string mobile, List<int> locationId, int roleId)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(Id));
     ValidationHelper.ValidateNotNullOrEmpty(userid, nameof(userid));

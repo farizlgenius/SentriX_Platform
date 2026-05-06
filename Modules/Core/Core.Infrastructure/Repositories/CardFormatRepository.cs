@@ -1,6 +1,7 @@
 using System;
-using Core.Application.DTOs;
+
 using Core.Application.Interfaces;
+using Core.Contract.DTOs;
 using Core.Domain.Constants;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistence;

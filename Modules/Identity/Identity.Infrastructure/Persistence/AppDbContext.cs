@@ -361,11 +361,11 @@ new Country { id = 177, name = "Zimbabwe", code = "ZW" }
         operator_id = "ADMIN001",
         username = "admin",
         password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
-        title = Title.Mr,
+        title = Title.Mr.ToString(),
         firstname = "Administrator",
         middlename = "",
         lastname = "SentriX",
-        gender = Gender.Male,
+        gender = Gender.Male.ToString(),
         email = "admin@sentrix.com",
         mobile = "",
         role_id = 1

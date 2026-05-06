@@ -1,11 +1,12 @@
-using Identity.Api.Helpers;
-using Identity.Application.DTOs;
-using Identity.Application.Interfaces;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Identity.Api.Controllers
+using Identity.Contract.Interfaces;
+using Identity.Contract.DTOs;
+
+namespace SentriX.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

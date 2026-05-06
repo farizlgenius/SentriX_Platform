@@ -1,8 +1,10 @@
-using System;
-using Identity.Application.DTOs;
-using Identity.Domain.Entities;
 
-namespace Identity.Application.Interfaces;
+
+
+
+using Identity.Contract.DTOs;
+
+namespace SentriX.Modules.Identity.Identity.Application.Interfaces;
 
 public interface IAuthRepository
 {

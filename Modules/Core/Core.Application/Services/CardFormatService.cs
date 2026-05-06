@@ -1,7 +1,7 @@
 using System;
-using Core.Application.DTOs;
 using Core.Application.Exceptions;
 using Core.Application.Interfaces;
+using Core.Contract.DTOs;
 using Core.Domain.Constants;
 
 namespace Core.Application.Services;

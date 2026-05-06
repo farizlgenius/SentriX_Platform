@@ -1,10 +1,12 @@
-using System;
-using Identity.Application.DTOs;
+
+using Identity.Domain.Entities;
+using Identity.Contract.DTOs;
+
 
 namespace Identity.Application.Interfaces;
 
 public interface ISettingRepository
 {
       Task<PasswordRuleDto> GetPassowrdRuleAsync();
-      Task<PasswordRuleDto> CreatePasswordRuleAsync(PasswordRuleDto dto);
+      Task<PasswordRuleDto> CreatePasswordRuleAsync(PasswordRule rule);
 }

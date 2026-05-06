@@ -2,7 +2,7 @@ using System;
 using Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Identity.Api.Helpers;
+namespace SentriX.Api.Helpers;
 
 public class DatabaseConnectionSettingHelper
 {

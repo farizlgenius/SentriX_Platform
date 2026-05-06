@@ -1,12 +1,13 @@
 using System;
-using Identity.Api.Middlewares;
-using Identity.Application.Interfaces;
 using Identity.Application.Services;
 using Identity.Application.Settings;
 using Identity.Infrastructure.Repositories;
 using Microsoft.Extensions.Options;
+using SentriX.Api.Middlewares;
+using SentriX.Modules.Identity.Identity.Application.Interfaces;
+using Identity.Contract.Interfaces;
 
-namespace Identity.Api.Helpers;
+namespace SentriX.Api.Helpers;
 
 public class DISettingHelper
 {

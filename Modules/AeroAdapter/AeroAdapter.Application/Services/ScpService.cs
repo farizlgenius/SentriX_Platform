@@ -4,15 +4,13 @@ using AeroAdapter.Application.Interfaces;
 using AeroAdapter.Application.Memories;
 using AeroAdapter.Domain.Entities;
 using AeroAdapter.Domain.Enums;
-using AeroAdapter.Domain.Events;
 using AeroAdapter.Domain.Helpers;
 using Application.Contracts.GeneratedDtos;
-using Sentrix.Contract.Messaging.Constants;
 
 
 namespace AeroAdapter.Application.Services;
 
-public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWriter writer, ISioWriter sioWriter, IMpWriter mpWriter,IMessagePublisher publisher,IdReports reports) : IScpService
+public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWriter writer, ISioWriter sioWriter, IMpWriter mpWriter,IdReports reports) : IScpService
 {
      
       public async Task AssignIpAddressAsync(int ScpId, SCPReplyMessageDto.CC_WEB_CONFIG_NETWORKDto message)
@@ -23,11 +21,7 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
                   return;
             // return await repo.UpdateIpAddressAsync(mac, UtilitiesHelper.IntegerToIp(message.cIpAddr));
             // publish message for update ip 
-            await publisher.PublishAsync(
-                  RabbitMqConstants.Device.EXCHANGE,
-                  RabbitMqConstants.Device.UPDATED_IP,
-                  new DeviceIpDto(mac,UtilitiesHelper.IntegerToIp(message.cIpAddr))
-                  );
+
       }
 
       public async Task AssignPortAsync(int ScpId, SCPReplyMessageDto.CC_WEB_CONFIG_HOST_COMM_PRIMDto message)
@@ -38,11 +32,7 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
                   // Log here
                   return;
 
-            await publisher.PublishAsync(
-                  RabbitMqConstants.Device.EXCHANGE,
-                  RabbitMqConstants.Device.UPDATED_PORT,
-                  new DevicePortDto(mac,message.ipclient.nPort)
-                  );
+
       }
 
       public async Task HandleIdReport(SCPReplyMessageDto.SCPReplyIDReportDto id)
@@ -76,7 +66,7 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
                   // Update ScpId if already Exists
                   var status = await repo.UpdateAsync(id.scp_id,UtilitiesHelper.ByteToHexStr(id.mac_addr));
                   var dto = new DeviceDto(id.scp_id,UtilitiesHelper.ByteToHexStr(id.mac_addr),id.serial_number.ToString(),$"{id.sft_rev_major}.{id.sft_rev_minor}",string.Empty,DateTime.UtcNow);
-                  await publisher.PublishAsync(RabbitMqConstants.Device.EXCHANGE,RabbitMqConstants.Device.UPDATED,dto);
+
                   // Publish Broker for update
             }
 
@@ -124,20 +114,8 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
             ))
                   return;
 
-            var @event = new CreateDeviceEvent(
-                  string.Empty,
-                  id.scp_id,
-                  UtilitiesHelper.ByteToHexStr(id.mac_addr),
-                  id.serial_number.ToString(),
-                  string.Empty,
-                  0,
-                  $"{id.sft_rev_major}.{id.sft_rev_minor}",
-                  "aero",
-                  DateTime.UtcNow,
-                  ScpSyncStatus.SYNC.ToString(),
-                  1
-                  );
-            await publisher.PublishAsync(RabbitMqConstants.Device.EXCHANGE,RabbitMqConstants.Device.CREATED,@event);
+
+
 
 
             // Send to get IP and Port 
@@ -322,20 +300,12 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
             if (isVerify)
             {
                   // Publish verify 
-                  await publisher.PublishAsync(
-                        RabbitMqConstants.Device.EXCHANGE,
-                        RabbitMqConstants.Device.MEMORY_ALLOCATED,
-                        new DeviceMemoryAllocateDto(mac,ScpSyncStatus.SYNC)
-                        );
+
             }
             else
             {
                   // Publish verify 
-                  await publisher.PublishAsync(
-                        RabbitMqConstants.Device.EXCHANGE,
-                        RabbitMqConstants.Device.MEMORY_ALLOCATED,
-                        new DeviceMemoryAllocateDto(mac,ScpSyncStatus.RESET)
-                        );
+
             }
 
             

@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="../Identity.Domain/Identity.Domain.csproj" />
+    <ProjectReference Include="../Identity.Contract/Identity.Contract.csproj" />
+    <ProjectReference Include="..\..\..\SentriX.BuildingBlock\SentriX.BuildingBlock.csproj" />
   </ItemGroup>
 
   <ItemGroup>

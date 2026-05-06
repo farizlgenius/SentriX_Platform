@@ -1,12 +1,14 @@
 using System;
-using Identity.Application.DTOs;
-using Identity.Application.Exceptions;
 using Identity.Application.Helpers;
-using Identity.Application.Interfaces;
+using Identity.Contract.DTOs;
 using Identity.Domain.Constants;
 using Identity.Domain.Entities;
 using Identity.Domain.Enums;
 using Microsoft.AspNetCore.Http;
+using SentriX.BuildingBlock.Exceptions;
+using SentriX.Modules.Identity.Identity.Application.Interfaces;
+
+using Identity.Contract.Interfaces;
 
 namespace Identity.Application.Services;
 
@@ -19,7 +21,7 @@ public class AuthService(IAuthRepository repo, IJwtService service, ICacheServic
     return new MeDto(System.Net.HttpStatusCode.OK, AuthResponseMessage.GetMeSuccess, DateTime.UtcNow, locations, permissions);
   }
 
-  public async Task<TokenDto> LoginAsync(LoginDto loginDto, HttpResponse response)
+  public async Task<TokenDto> LoginAsync(LoginDto loginDto)
   {
     //Check username is empty
     if (string.IsNullOrEmpty(loginDto.Username))
@@ -46,24 +48,16 @@ public class AuthService(IAuthRepository repo, IJwtService service, ICacheServic
     // Generate token (for demonstration, using a simple string)
     var token = await service.GenerateTokenAsync(user);
 
-    response.Cookies.Append("refresh_token", token.RefreshToken, new CookieOptions
-    {
-      HttpOnly = true,
-      Secure = true,
-      SameSite = SameSiteMode.None,
-      // Path = "/api/Auth",
-      Expires = new DateTimeOffset(token.RefreshExpireAt, TimeSpan.Zero)
-    });
-
     return new TokenDto(
       token.AccessToken,
       token.RefreshToken,
-      token.ExpiresAt
+      token.ExpiredAt,
+      token.RefreshExpiredAt
       );
 
   }
 
-  public async Task<BaseDto> LogoutAsync(string refreshToken, HttpResponse response)
+  public async Task<BaseDto> LogoutAsync(string refreshToken)
   {
     var hashed = TokenHasher.Hash(refreshToken);
     var refresh = await service.GetRefreshTokenAsync(hashed);
@@ -80,24 +74,16 @@ public class AuthService(IAuthRepository repo, IJwtService service, ICacheServic
 
     await service.RevokeTokenAsync(refreshToken);
 
-    response.Cookies.Delete("refresh_token", new CookieOptions
-    {
-      HttpOnly = true,
-      Secure = true,
-      SameSite = SameSiteMode.None,
-      // Path = "/api/Auth"
-    });
-
     return new BaseDto(System.Net.HttpStatusCode.OK, AuthResponseMessage.LogoutSuccess, DateTime.UtcNow);
   }
 
-  public async Task<TokenDto> RefreshTokenAsync(string refreshToken, HttpResponse response)
+  public async Task<TokenDto> RefreshTokenAsync(string refreshToken)
   {
     var inCommingHashed = TokenHasher.Hash(refreshToken);
 
     // Get from redis first
     //...
-    var refresh = await redis.GetAsync<RefreshToken>(inCommingHashed);
+    var refresh = await redis.GetAsync<RefreshTokenDto>(inCommingHashed);
     if (refresh == null)
       refresh = await service.GetRefreshTokenAsync(inCommingHashed);
 
@@ -112,22 +98,16 @@ public class AuthService(IAuthRepository repo, IJwtService service, ICacheServic
       throw new BadRequestException(AuthResponseMessage.RefreshTokenInvalid);
 
     // Generate token (for demonstration, using a simple string)
-    var user = await repo.GetUserByUsernameAsync(refresh.UserName);
+    var user = await repo.GetUserByUsernameAsync(refresh.Username);
     var token = await service.RefreshTokenAsync(user);
 
-    response.Cookies.Append("refresh_token", token.RefreshToken, new CookieOptions
-    {
-      HttpOnly = true,
-      Secure = true,
-      SameSite = SameSiteMode.None,
-      // Path = "/api/Auth",
-      Expires = new DateTimeOffset(token.RefreshExpireAt, TimeSpan.Zero)
-    });
+    
 
     return new TokenDto(
       token.AccessToken,
       token.RefreshToken,
-      token.ExpiresAt
+      token.ExpiredAt,
+      token.RefreshExpiredAt
       );
 
 

@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json;
 
-namespace Identity.Api.Helpers;
+namespace SentriX.Api.Helpers;
 
 public class AuthResponseHelper
 {

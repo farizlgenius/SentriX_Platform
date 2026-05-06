@@ -1,12 +1,15 @@
-using System;
+
+
+
 using Identity.Application.Interfaces;
-using Identity.Domain.Entities;
+using Identity.Contract.DTOs;
+using Identity.Contract.Interfaces;
 
 namespace Identity.Application.Services;
 
 public sealed class ApiKeyService(IApiKeyRepository repo) : IApiKeyService
 {
-  public async Task<ApiKey> ValidateApiKeyAsync(string apiKey)
+  public async Task<ApiKeyDto> ValidateApiKeyAsync(string apiKey)
   {
     return await repo.ValidateApiKeyAsync(apiKey);
   }

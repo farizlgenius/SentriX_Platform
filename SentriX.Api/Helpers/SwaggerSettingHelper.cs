@@ -2,7 +2,7 @@
 
 using Microsoft.OpenApi.Models;
 
-namespace Identity.Api.Helpers;
+namespace SentriX.Api.Helpers;
 
 public class SwaggerSettingHelper
 {

@@ -2,27 +2,39 @@
   <Folder Name="/Modules/" />
   <Folder Name="/Modules/AeroAdapter/">
     <Project Path="Modules/AeroAdapter/AeroAdapter.Application/AeroAdapter.Application.csproj" />
+    <Project Path="Modules/AeroAdapter/AeroAdapter.Contract/AeroAdapter.Contract.csproj" />
     <Project Path="Modules/AeroAdapter/AeroAdapter.Domain/AeroAdapter.Domain.csproj" />
     <Project Path="Modules/AeroAdapter/AeroAdapter.DtoGenerator/AeroAdapter.DtoGenerator.csproj" />
     <Project Path="Modules/AeroAdapter/AeroAdapter.Infrastructure/AeroAdapter.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Modules/AmicoAdapter/">
     <Project Path="Modules/AmicoAdapter/AmicoAdapter.Application/AmicoAdapter.Application.csproj" />
+    <Project Path="Modules/AmicoAdapter/AmicoAdapter.Contract/AmicoAdapter.Contract.csproj" />
     <Project Path="Modules/AmicoAdapter/AmicoAdapter.Domain/AmicoAdapter.Domain.csproj" />
     <Project Path="Modules/AmicoAdapter/AmicoAdapter.Infrastructure/AmicoAdapter.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Modules/Core/">
     <Project Path="Modules/Core/Core.Application/Core.Application.csproj" />
+    <Project Path="Modules/Core/Core.Contract/Core.Contract.csproj" />
     <Project Path="Modules/Core/Core.Domain/Core.Domain.csproj" />
     <Project Path="Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Modules/Identity/">
     <Project Path="Modules/Identity/Identity.Application/Identity.Application.csproj" />
+    <Project Path="Modules/Identity/Identity.Contract/Identity.Contract.csproj" />
     <Project Path="Modules/Identity/Identity.Domain/Identity.Domain.csproj" />
     <Project Path="Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Modules/Realtime/">
     <Project Path="Modules/Realtime/Realtime.Api/Realtime.Api.csproj" />
+    <Project Path="Modules/Realtime/Realtime.Contract/Realtime.Contract.csproj" />
+  </Folder>
+  <Folder Name="/Modules/UINotifier/">
+    <Project Path="Modules/UINotifier/UINotifier.Application/UINotifier.Application.csproj" />
+    <Project Path="Modules/UINotifier/UINotifier.Contract/UINotifier.Contract.csproj" />
+    <Project Path="Modules/UINotifier/UINotifier.Domain/UINotifier.Domain.csproj" />
+    <Project Path="Modules/UINotifier/UINotifier.Infrastructure/UINotifier.Infrastructure.csproj" />
   </Folder>
   <Project Path="SentriX.Api/SentriX.Api.csproj" />
+  <Project Path="SentriX.BuildingBlock/SentriX.BuildingBlock.csproj" />
 </Solution>

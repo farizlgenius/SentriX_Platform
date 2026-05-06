@@ -1,10 +1,11 @@
 using System;
-using Identity.Application.Interfaces;
 using Identity.Application.Settings;
 using Identity.Infrastructure.Cache;
+using Identity.Contract.Interfaces;
 using StackExchange.Redis;
 
-namespace Identity.Api.Helpers;
+
+namespace SentriX.Api.Helpers;
 
 public class CacheSettingHelper
 {

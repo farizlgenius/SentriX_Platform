@@ -8,11 +8,11 @@ public sealed class Operator : BaseEntity
   public string operator_id { get; set; } = string.Empty;
   public string username { get; set; } = string.Empty;
   public string password { get; set; } = string.Empty;
-  public Title title { get; set; } = Title.Mr;
+  public string title { get; set; } = Title.Mr.ToString();
   public string firstname { get; set; } = string.Empty;
   public string middlename { get; set; } = string.Empty;
   public string lastname { get; set; } = string.Empty;
-  public Gender gender { get; set; } = Gender.Male;
+  public string gender { get; set; } = Gender.Male.ToString();
   public string email { get; set; } = string.Empty;
   public string mobile { get; set; } = string.Empty;
 

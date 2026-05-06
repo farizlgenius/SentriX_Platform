@@ -18,4 +18,14 @@
     <Folder Include="Middlewares/" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\AeroAdapter\AeroAdapter.Contract\AeroAdapter.Contract.csproj" />
+    <ProjectReference Include="..\Modules\AmicoAdapter\AmicoAdapter.Contract\AmicoAdapter.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Core\Core.Contract\Core.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Identity\Identity.Contract\Identity.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Realtime\Realtime.Contract\Realtime.Contract.csproj" />
+    <ProjectReference Include="..\SentriX.BuildingBlock\SentriX.BuildingBlock.csproj" />
+  </ItemGroup>
+
 </Project>

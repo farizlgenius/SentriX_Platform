@@ -1,16 +1,16 @@
 using System;
-using Identity.Application.Helpers;
-using Identity.Application.Interfaces;
 using Identity.Domain.Entities;
 using Identity.Domain.Enums;
 using Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using SentriX.Modules.Identity.Identity.Application.Interfaces;
+using Identity.Contract.Interfaces;
 
 namespace Identity.Infrastructure.Repositories;
 
 public class RefreshTokenAuditRepository(AppDbContext context) : IRefreshTokenAuditRepository
 {
-  public async Task AddAsync(string username, string hashedRefreshToken, TokenAction action, DateTime expiredAt)
+  public async Task AddAsync(string username, string hashedRefreshToken, string action, DateTime expiredAt)
   {
     var audit = new Persistence.Entities.RefreshTokenAudit
     {
@@ -32,7 +32,7 @@ public class RefreshTokenAuditRepository(AppDbContext context) : IRefreshTokenAu
     .Where(x => x.hashed_refresh_token.Equals(hash))
     .Select(x => new RefreshToken(x.hashed_refresh_token, x.username, x.username, x.action, x.expired_at))
     .FirstOrDefaultAsync() ??
-    new RefreshToken(string.Empty, string.Empty, string.Empty, TokenAction.CREATE, DateTime.UtcNow)
+    new RefreshToken(string.Empty, string.Empty, string.Empty, TokenAction.CREATE.ToString(), DateTime.UtcNow)
     ;
   }
 

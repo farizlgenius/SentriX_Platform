@@ -1,5 +1,6 @@
 using System;
-using Identity.Application.Interfaces;
+
+using Identity.Contract.Interfaces;
 
 namespace Identity.Infrastructure.Cache;
 
