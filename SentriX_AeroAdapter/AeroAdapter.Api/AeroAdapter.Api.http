@@ -1,9 +1,0 @@
-
-POST http://localhost:8005/api/scp
-Accept: application/json
-
-###
-
-POST http://localhost:8005/api/scp
-Accept: application/json
-
