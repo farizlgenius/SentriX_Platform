@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using System.Text.Json;
 using AeroAdapter.Application.Interfaces;
-using AeroAdapter.Domain.Constants;
 using RabbitMQ.Client;
 
 namespace AeroAdapter.Infrastructure.Messaging;

@@ -4,14 +4,15 @@ using Core.Application.Interfaces;
 using Core.Domain.Constants;
 using Core.Domain.Entities;
 using Core.Domain.Events;
+using Sentrix.Contract.Messaging.Constants;
 
 namespace Core.Application.Handlers;
 
 
 public sealed class DeviceCreatedEventHandler(IDeviceRepository repo) : IRabbitMqHandler<CreateDeviceEvent>
 {
-      public string Exchange => MessageConstants.Device.EXCHANGE;
-      public string RoutingKey => MessageConstants.Device.DEVICE_CREATED;
+      public string Exchange => RabbitMqConstants.Device.EXCHANGE;
+      public string RoutingKey => RabbitMqConstants.Device.CREATED;
 
       public async Task HandleAsync(CreateDeviceEvent Message, CancellationToken ct = default)
       {

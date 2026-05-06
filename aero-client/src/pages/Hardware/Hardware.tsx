@@ -3,15 +3,12 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import Button from "../../components/ui/button/Button";
 import { HardwareIcon, ResetIcon, ScanIcon, ToggleTranIcon, TransferIcon, UploadIcon } from "../../icons";
 import Modals from "../UiElements/Modals";
-import HttpRequest from "../../utility/HttpRequest";
 import Helper from "../../utility/Helper";
 import HardwareForm from "../../components/form/hardware/HardwareForm";
-import Logger from "../../utility/Logger";
 import { HardwareDto } from "../../model/Hardware/HardwareDto";
 import { IdReport } from "../../model/IdReport/IdReport";
 import SignalRService from "../../services/SignalRService";
 import { StatusDto } from "../../model/StatusDto";
-import { HttpMethod } from "../../enum/HttpMethod";
 import { HardwareEndpoint } from "../../endpoint/HardwareEndpoint";
 import { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
@@ -35,17 +32,19 @@ import { SetTranDto } from "../../model/Hardware/SetTranDto";
 import { usePagination } from "../../context/PaginationContext";
 import { ScpStatus } from "../../model/Hardware/ScpStatus";
 import { CreateHardwareDto } from "../../model/Hardware/CreateHardwareDto";
+import { useIdReport } from "../../context/IdReportContext";
 
 
 const HEADER = ["Name", "Type", "Mac","Firmware", "IP","Port", "Transction", "Configuration", "Status", "Action"];
 const KEY = ["name", "hardwareTypeDetail", "mac","firmware", "ip","port", "tranStatus"];
 // Hardware Page
-const ID_REPORT_KEY = [ "componentId",'macAddress','port','ip','serialNumber'];
-const ID_REPORT_TABLE_HEADER = ["Id", "Mac", "Port", "Ip","Serial No", "Action"];
+const ID_REPORT_KEY = [ "componentId",'mac','fw','serialNumber'];
+const ID_REPORT_TABLE_HEADER = ["Id", "Mac", "Firmware","Serial No", "Action"];
 
 
 const Hardware = () => {
   const { FlashLoading } = useLoading();
+  const { idReports } = useIdReport();
   const {setPagination} = usePagination();
   const { locationId } = useLocation();
   const { toggleToast } = useToast();
@@ -56,27 +55,27 @@ const Hardware = () => {
 
   let ScanTableTemplate: ReactNode;
 
-  const defaultCreateDto: CreateHardwareDto = {
-    scpId: 0,
-    name: "",
-    hardwareType: 0,
-    hardwareTypeDetail: "",
-    mac: "",
-    port: "",
-    ip: "",
-    firmware: "",
-    serialNumber: "",
-    portOne: false,
-    protocolOne: 0,
-    protocolOneDetail: "",
-    baudRateOne: 0,
-    portTwo: false,
-    protocolTwo: 0,
-    protocolTwoDetail: "",
-    baudRateTwo: 0,
-    locationId: 0,
-    isActive: false
-  }
+  // const defaultCreateDto: CreateHardwareDto = {
+  //   scpId: 0,
+  //   name: "",
+  //   hardwareType: 0,
+  //   hardwareTypeDetail: "",
+  //   mac: "",
+  //   port: "",
+  //   ip: "",
+  //   firmware: "",
+  //   serialNumber: "",
+  //   portOne: false,
+  //   protocolOne: 0,
+  //   protocolOneDetail: "",
+  //   baudRateOne: 0,
+  //   portTwo: false,
+  //   protocolTwo: 0,
+  //   protocolTwoDetail: "",
+  //   baudRateTwo: 0,
+  //   locationId: 0,
+  //   isActive: false
+  // }
 
   const defaultDto: HardwareDto = {
     // Base
@@ -126,38 +125,32 @@ const Hardware = () => {
   {/* IdReport */ }
   const [idReportList, setIdReportList] = useState<IdReport[]>([]);
   const handleAddIdReport = async (data: IdReport) => {
-    setHardwareDto({
-     scpId: data.scpId,
-    name: "",
-    hardwareType: data.hardwareType,
-    hardwareTypeDetail: data.hardwareTypeDescription,
-    mac: data.macAddress,
-    port: data.port,
-    ip: data.ip,
-    firmware: data.firmware,
-    serialNumber: String(data.serialNumber),
-    portOne: false,
-    protocolOne: 0,
-    protocolOneDetail: "",
-    baudRateOne: 0,
-    portTwo: false,
-    protocolTwo: 0,
-    protocolTwoDetail: "",
-    baudRateTwo: 0,
-    locationId: locationId,
-    isActive: false
-    });
+    // setHardwareDto({
+    //  scpId: data.scpId,
+    // name: "",
+    // hardwareType: data.type,
+    // hardwareTypeDetail: data.hardwareTypeDescription,
+    // mac: data.mac,
+    // port: data.port,
+    // ip: data.ip,
+    // firmware: data.fw,
+    // serialNumber: String(data.serialNumber),
+    // portOne: false,
+    // protocolOne: 0,
+    // protocolOneDetail: "",
+    // baudRateOne: 0,
+    // portTwo: false,
+    // protocolTwo: 0,
+    // protocolTwoDetail: "",
+    // baudRateTwo: 0,
+    // locationId: locationId,
+    // isActive: false
+    // });
     console.log(data);
     setScan(false);
     setForm(true);
   }
-  const fetchIdReport = async () => {
-    const res = await send.get(HardwareEndpoint.ID_REPORT(locationId));
-    if (res && res.data.data) {
-      setIdReportList(res.data.data);
-    }
-    
-  }
+
 
   ScanTableTemplate = (
     <>
@@ -178,7 +171,7 @@ const Hardware = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            {idReportList.map((data: any, i: number) => (
+            {idReports.map((data: any, i: number) => (
               <TableRow key={i}>
                 {ID_REPORT_KEY.map((key: string, i: number) =>
                   <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
@@ -423,7 +416,7 @@ const Hardware = () => {
         break;
       case "scan":
         setScan(true);
-        fetchIdReport();
+        // fetchIdReport();
         break;
       case "close":
         setForm(false)
@@ -506,11 +499,6 @@ const Hardware = () => {
       })
     });
 
-    connection.on("SCP.ID_REPORT", (IdReports: IdReport[]) => {
-      setIdReportList(IdReports);
-    })
-    //connection.on
-    fetchIdReport();
     return () => {
       //SignalRService.stopConnection()
     };

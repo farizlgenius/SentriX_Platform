@@ -3,13 +3,14 @@ using Core.Application.Interfaces;
 using Core.Domain.Constants;
 using Core.Domain.Entities;
 using Core.Domain.Events;
+using Sentrix.Contract.Messaging.Constants;
 
 namespace Core.Application.Handlers;
 
 public sealed class DeviceUpdatedIpEventHandler(IDeviceRepository repo) : IRabbitMqHandler<UpdateDeviceIpEvent>
 {
-       public string Exchange => MessageConstants.Device.EXCHANGE;
-      public string RoutingKey => MessageConstants.Device.DEVICE_UPDATED_IP;
+       public string Exchange => RabbitMqConstants.Device.EXCHANGE;
+      public string RoutingKey => RabbitMqConstants.Device.UPDATED_IP;
 
       public async Task HandleAsync(UpdateDeviceIpEvent Message, CancellationToken ct = default)
       {

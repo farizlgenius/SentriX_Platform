@@ -2,12 +2,12 @@ using System;
 using AeroAdapter.Application.DTOs;
 using AeroAdapter.Application.Interfaces;
 using AeroAdapter.Application.Memories;
-using AeroAdapter.Domain.Constants;
 using AeroAdapter.Domain.Entities;
 using AeroAdapter.Domain.Enums;
 using AeroAdapter.Domain.Events;
 using AeroAdapter.Domain.Helpers;
 using Application.Contracts.GeneratedDtos;
+using Sentrix.Contract.Messaging.Constants;
 
 
 namespace AeroAdapter.Application.Services;
@@ -24,8 +24,8 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
             // return await repo.UpdateIpAddressAsync(mac, UtilitiesHelper.IntegerToIp(message.cIpAddr));
             // publish message for update ip 
             await publisher.PublishAsync(
-                  MessageConstant.Device.DEVICE_EXCHANGE,
-                  MessageConstant.Device.DEVICE_UPDATED_IP_KEY,
+                  RabbitMqConstants.Device.EXCHANGE,
+                  RabbitMqConstants.Device.UPDATED_IP,
                   new DeviceIpDto(mac,UtilitiesHelper.IntegerToIp(message.cIpAddr))
                   );
       }
@@ -39,8 +39,8 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
                   return;
 
             await publisher.PublishAsync(
-                  MessageConstant.Device.DEVICE_EXCHANGE,
-                  MessageConstant.Device.DEVICE_UPDATED_PORT_KEY,
+                  RabbitMqConstants.Device.EXCHANGE,
+                  RabbitMqConstants.Device.UPDATED_PORT,
                   new DevicePortDto(mac,message.ipclient.nPort)
                   );
       }
@@ -76,7 +76,7 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
                   // Update ScpId if already Exists
                   var status = await repo.UpdateAsync(id.scp_id,UtilitiesHelper.ByteToHexStr(id.mac_addr));
                   var dto = new DeviceDto(id.scp_id,UtilitiesHelper.ByteToHexStr(id.mac_addr),id.serial_number.ToString(),$"{id.sft_rev_major}.{id.sft_rev_minor}",string.Empty,DateTime.UtcNow);
-                  await publisher.PublishAsync(MessageConstant.Device.DEVICE_EXCHANGE,MessageConstant.Device.DEVICE_UPDATED_KEY,dto);
+                  await publisher.PublishAsync(RabbitMqConstants.Device.EXCHANGE,RabbitMqConstants.Device.UPDATED,dto);
                   // Publish Broker for update
             }
 
@@ -137,7 +137,7 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
                   ScpSyncStatus.SYNC.ToString(),
                   1
                   );
-            await publisher.PublishAsync(MessageConstant.Device.DEVICE_EXCHANGE,MessageConstant.Device.DEVICE_CREATED_KEY,@event);
+            await publisher.PublishAsync(RabbitMqConstants.Device.EXCHANGE,RabbitMqConstants.Device.CREATED,@event);
 
 
             // Send to get IP and Port 
@@ -323,8 +323,8 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
             {
                   // Publish verify 
                   await publisher.PublishAsync(
-                        MessageConstant.Device.DEVICE_EXCHANGE,
-                        MessageConstant.Device.DEVICE_MEMORY_ALLOCATED_KEY,
+                        RabbitMqConstants.Device.EXCHANGE,
+                        RabbitMqConstants.Device.MEMORY_ALLOCATED,
                         new DeviceMemoryAllocateDto(mac,ScpSyncStatus.SYNC)
                         );
             }
@@ -332,8 +332,8 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
             {
                   // Publish verify 
                   await publisher.PublishAsync(
-                        MessageConstant.Device.DEVICE_EXCHANGE,
-                        MessageConstant.Device.DEVICE_MEMORY_ALLOCATED_KEY,
+                        RabbitMqConstants.Device.EXCHANGE,
+                        RabbitMqConstants.Device.MEMORY_ALLOCATED,
                         new DeviceMemoryAllocateDto(mac,ScpSyncStatus.RESET)
                         );
             }

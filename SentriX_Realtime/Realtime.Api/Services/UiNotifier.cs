@@ -8,22 +8,25 @@ namespace Realtime.Api.Services;
 
 public class UiNotifier : IUiNotifier
 {
-    private readonly IHubContext<UiHub, IUiClient> _hub;
+    private readonly IHubContext<UiHub> _hub;
 
-    public UiNotifier(IHubContext<UiHub, IUiClient> hub)
+    public UiNotifier(IHubContext<UiHub> hub)
     {
         _hub = hub;
     }
 
     public async Task SendToTopic(string topic, object payload)
     {
-        await _hub.Clients.Group(topic)
-            .ReceiveMessage(topic, payload);
+        // await _hub.Clients.Group(topic)
+        //     .SendAsync(topic, payload);
+
+        await _hub.Clients.All.SendAsync(topic,payload);
+
     }
 
     public async Task SendToUser(string userId, object payload)
     {
         await _hub.Clients.Group($"user-{userId}")
-            .ReceiveMessage("private", payload);
+            .SendAsync("private", payload);
     }
 }

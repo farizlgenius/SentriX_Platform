@@ -69,10 +69,16 @@ import { useLocation } from "./context/LocationContext";
 import { Company } from "./pages/Company/Company";
 import { Department } from "./pages/Department/Department";
 import { Position } from "./pages/Position/Position";
+import SignalRService from "./services/SignalRService";
+import { IdReport } from "./model/IdReport/IdReport";
+import { useIdReport } from "./context/IdReportContext";
+import { SignalRTopic } from "./constants/signalr-constant";
+import { HardwareEndpoint } from "./endpoint/HardwareEndpoint";
 
 export default function App() {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { signIn, token } = useAuth();
+  const { setIdReports } = useIdReport();
   const {
     create,
     remove,
@@ -109,6 +115,13 @@ export default function App() {
     }
   };
 
+  const fetchIdReport = async () => {
+    const res = await send.get(HardwareEndpoint.ID_REPORT(locationId));
+    if (res && res.data.data) {
+      // setIdReportList(res.data.data);
+    }
+  }
+
   {
     /* License Check */
   }
@@ -130,14 +143,45 @@ export default function App() {
     }
   };
 
-  useEffect(() => {
+ useEffect(() => {
+  const initSignalR = async () => {
     checkLicense();
     if (!license) {
       navigate("/license");
+      return;
     }
-  }, []);
 
-  useEffect(() => {}, [locationId]);
+    // ⭐ ensure connection is started
+    await SignalRService.startConnection();
+
+    const connection = SignalRService.getConnection();
+    if (!connection) return;
+
+    // ⭐ register handlers FIRST
+    connection.on(SignalRTopic.IDREPORT, (idreports: IdReport[]) => {
+      console.log("Received realtime update:", idreports);
+      setIdReports(idreports);
+    });
+
+    // ⭐ THEN join group
+    await SignalRService.joinGroup(SignalRTopic.IDREPORT);
+
+    // initial load
+    fetchIdReport();
+  };
+
+  initSignalR();
+
+  // ⭐ cleanup when component unmounts
+  return () => {
+    const connection = SignalRService.getConnection();
+    connection?.off(SignalRTopic.IDREPORT);
+  };
+}, []);
+
+  useEffect(() => { }, [locationId]);
+
+
 
   return (
     <>
@@ -177,9 +221,9 @@ export default function App() {
           <Route
             element={
               <ProtectedRoute>
-                  <AppLayout />
+                <AppLayout />
               </ProtectedRoute>
-              
+
             }
           >
             <Route index path="/" element={<Home />} />

@@ -1,9 +1,9 @@
 using System;
 using AeroAdapter.Application.DTOs;
 using AeroAdapter.Application.Interfaces;
-using AeroAdapter.Domain.Constants;
 using AeroAdapter.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
+using Sentrix.Contract.Messaging.Constants;
 
 namespace AeroAdapter.Application.Memories;
 
@@ -11,6 +11,25 @@ public sealed class IdReports(IServiceScopeFactory sp)
 {
      
        public List<Domain.Entities.IdReport> IdReportInMemory {get; set;} = new List<Domain.Entities.IdReport>();
+
+       public List<IdReportDto> GetIdReport()
+      {
+                  List<IdReportDto> dtos = new List<IdReportDto>();
+            
+            foreach(var id in IdReportInMemory)
+            {
+                  dtos.Add(
+                        new IdReportDto(
+                              id.ScpId,
+                              id.SerialNumber,
+                              id.Mac,
+                              id.Fw
+                              )
+                  );
+            }
+
+            return dtos;
+      }     
 
        public async Task AddIdReport(IdReport reports)
       {
@@ -20,23 +39,21 @@ public sealed class IdReports(IServiceScopeFactory sp)
             if(!IdReportInMemory.Any(x => x.Mac.Equals(reports.Mac)))
                   IdReportInMemory.Add(reports);
 
-            List<IdReport> dtos = new List<IdReport>();
+            List<IdReportDto> dtos = new List<IdReportDto>();
             
             foreach(var id in IdReportInMemory)
             {
                   dtos.Add(
-                        new IdReport(
+                        new IdReportDto(
                               id.ScpId,
                               id.SerialNumber,
                               id.Mac,
-                              id.Ip,
-                              id.Port,
                               id.Fw
                               )
                   );
             }
 
-            await publish.PublishAsync(MessageConstant.UI.UI_EXCHANGE,MessageConstant.UI.ID_REPORT_ADD,true); // Publish to Realtime Service
+            await publish.PublishAsync(RabbitMqConstants.UI.EXCHANGE,RabbitMqConstants.UI.IDREPORT,dtos); // Publish to Realtime Service
             
       }
 

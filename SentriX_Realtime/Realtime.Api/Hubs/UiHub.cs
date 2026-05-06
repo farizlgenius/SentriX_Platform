@@ -6,12 +6,13 @@ using Sentrix.Contract.UiNotification.Interfaces;
 namespace Realtime.Api.Hubs;
 
 [Authorize]
-public sealed class UiHub : Hub<IUiClient>
+public sealed class UiHub : Hub
 {
       // User subscribes to a topic (group)
     public async Task Subscribe(string topic)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, topic);
+         Console.WriteLine($"User {Context.User?.Identity?.Name} joined {topic}");
     }
 
     public async Task Unsubscribe(string topic)

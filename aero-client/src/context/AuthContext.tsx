@@ -9,6 +9,7 @@ import { useLocation } from "./LocationContext";
 import { LocationDto } from "../model/Location/LocationDto";
 import { PermissionDto as PermissionDto } from "../model/Role/PermissionDto";
 import { AuthToast } from "../model/ToastMessage";
+import SignalRService from "../services/SignalRService";
 
 
 interface AuthContextType {
@@ -54,6 +55,10 @@ const doRefresh = async () => {
             if (res?.status !== 200) return false;
             setAccessToken(res.data.accessToken)
             setToken(res.data.accessToken);
+            SignalRService.setToken(res.data.accessToken);
+
+            await SignalRService.stopConnection();
+            await SignalRService.startConnection();
             return true;
         } catch {
             return false;
@@ -127,6 +132,7 @@ const doRefresh = async () => {
         }
         setAccessToken(res.data.accessToken)
         setToken(res.data.accessToken);
+        SignalRService.setToken(res.data.accessToken);
         await fetchMe();
         return true
     }, [fetchMe])

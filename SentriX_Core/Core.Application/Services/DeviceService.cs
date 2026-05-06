@@ -8,6 +8,7 @@ using Core.Domain.Constants;
 using Core.Domain.Entities;
 using Core.Domain.Enums;
 using Core.Domain.Events;
+using Sentrix.Contract.Messaging.Constants;
 
 namespace Core.Application.Services;
 
@@ -60,7 +61,7 @@ public class DeviceService(IDeviceRepository repo,IMessagePublisher publisher) :
       dto.LocationId
       );
     
-    await publisher.PublishAsync(MessageConstants.Device.EXCHANGE,MessageConstants.Device.DEVICE_CREATED,@event);
+    await publisher.PublishAsync(RabbitMqConstants.Device.EXCHANGE,RabbitMqConstants.Device.CREATED,@event);
 
     return res;
   }
@@ -75,7 +76,7 @@ public class DeviceService(IDeviceRepository repo,IMessagePublisher publisher) :
 
       public async Task<BaseDto> GetIdReportAsync()
       {
-          await publisher.PublishAsync(MessageConstants.Device.EXCHANGE,MessageConstants.Device.DEVICE_IDREPORT,true);
+          await publisher.PublishAsync(RabbitMqConstants.Device.EXCHANGE,RabbitMqConstants.Device.IDREPORT,true);
           return new BaseDto(
             HttpStatusCode.OK,
             ResponseMessage.Success,

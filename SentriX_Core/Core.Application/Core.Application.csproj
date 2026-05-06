@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Core.Domain/Core.Domain.csproj" />
+    <ProjectReference Include="..\..\Sentrix_Contract\Sentrix.Contract\Sentrix.Contract.csproj" />
   </ItemGroup>
 
 </Project>

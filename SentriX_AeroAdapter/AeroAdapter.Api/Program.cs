@@ -33,7 +33,7 @@ public class Program
         builder.Services.AddOptions<RabbitMqOption>()
         .Bind(builder.Configuration.GetSection("RabbitMQ"))
         .ValidateOnStart();
-        builder.Services.AddScoped<IRabbitMqFactory,RabbitMqFactory>();
+       
         builder.Services.AddSingleton<IRabbitMqOption>(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<RabbitMqOption>>().Value);
         builder.Services.AddSingleton(
                 Channel.CreateBounded<SCPReplyMessageDto>(
@@ -62,7 +62,7 @@ public class Program
         //=============
         // Configuration Dependency Injection
         //=============
-        DISetting.DISettingHelper(builder);
+        DISetting.DependencyInjectionSetting(builder);
 
         // Add services to the container.
         builder.Services.AddDbContext<AppDbContext>(options =>

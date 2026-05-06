@@ -6,12 +6,16 @@ $services = @(
     @{ path="./SentriX_Gateway/Gateway.Api";     urls="https://localhost:5000;http://localhost:5005" },
     @{ path="./SentriX_Identity/Identity.Api";   urls="https://localhost:5001;http://localhost:5006" },
     @{ path="./SentriX_Realtime/Realtime.Api";   urls="https://localhost:5002;http://localhost:5007" }
-    # @{ path="./SentriX_AmicoAdapter/AmicoAdapter.Api"; urls="https://localhost:5010;http://localhost:5011" }
 )
 
 foreach ($service in $services) {
     Write-Host "Starting $($service.path)" -ForegroundColor Yellow
-    Start-Process powershell -ArgumentList "-NoExit -Command `"cd $($service.path); `$env:ASPNETCORE_URLS='$($service.urls)'; dotnet watch`" 
+    
+    $cmd = "`$env:ASPNETCORE_URLS='$($service.urls)'; dotnet watch"
+
+    Start-Process powershell `
+        -ArgumentList "-NoExit", "-Command", $cmd `
+        -WorkingDirectory $service.path
 }
 
 Write-Host "All services running with HTTPS 🚀"

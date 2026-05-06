@@ -8,7 +8,9 @@
 
   <ItemGroup>
     <Folder Include="Messaging\" />
+    <Folder Include="Messaging\Constants\" />
     <Folder Include="UiNotification\" />
+    <Folder Include="UiNotification\Constants\" />
     <Folder Include="UiNotification\DTOS\" />
     <Folder Include="UiNotification\Interfaces\" />
   </ItemGroup>
