@@ -18,9 +18,4 @@
     <Folder Include="Middlewares/" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../Identity.Application/Identity.Application.csproj" />
-    <ProjectReference Include="../Identity.Infrastructure/Identity.Infrastructure.csproj" />
-  </ItemGroup>
-
 </Project>

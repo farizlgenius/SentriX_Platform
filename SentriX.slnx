@@ -1,36 +1,28 @@
 <Solution>
-  <Folder Name="/SentriX_AeroAdapter/">
-    <Project Path="SentriX_AeroAdapter/AeroAdapter.Api/AeroAdapter.Api.csproj" />
-    <Project Path="SentriX_AeroAdapter/AeroAdapter.Application/AeroAdapter.Application.csproj" />
-    <Project Path="SentriX_AeroAdapter/AeroAdapter.Domain/AeroAdapter.Domain.csproj" />
-    <Project Path="SentriX_AeroAdapter/AeroAdapter.DtoGenerator/AeroAdapter.DtoGenerator.csproj" />
-    <Project Path="SentriX_AeroAdapter/AeroAdapter.Infrastructure/AeroAdapter.Infrastructure.csproj" />
+  <Folder Name="/Modules/" />
+  <Folder Name="/Modules/AeroAdapter/">
+    <Project Path="Modules/AeroAdapter/AeroAdapter.Application/AeroAdapter.Application.csproj" />
+    <Project Path="Modules/AeroAdapter/AeroAdapter.Domain/AeroAdapter.Domain.csproj" />
+    <Project Path="Modules/AeroAdapter/AeroAdapter.DtoGenerator/AeroAdapter.DtoGenerator.csproj" />
+    <Project Path="Modules/AeroAdapter/AeroAdapter.Infrastructure/AeroAdapter.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/SentriX_AmicoAdapter/">
-    <Project Path="SentriX_AmicoAdapter/AmicoAdapter.Api/AmicoAdapter.Api.csproj" />
-    <Project Path="SentriX_AmicoAdapter/AmicoAdapter.Application/AmicoAdapter.Application.csproj" />
-    <Project Path="SentriX_AmicoAdapter/AmicoAdapter.Domain/AmicoAdapter.Domain.csproj" />
-    <Project Path="SentriX_AmicoAdapter/AmicoAdapter.Infrastructure/AmicoAdapter.Infrastructure.csproj" />
+  <Folder Name="/Modules/AmicoAdapter/">
+    <Project Path="Modules/AmicoAdapter/AmicoAdapter.Application/AmicoAdapter.Application.csproj" />
+    <Project Path="Modules/AmicoAdapter/AmicoAdapter.Domain/AmicoAdapter.Domain.csproj" />
+    <Project Path="Modules/AmicoAdapter/AmicoAdapter.Infrastructure/AmicoAdapter.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/Sentrix_Contract/">
-    <Project Path="Sentrix_Contract/Sentrix.Contract/Sentrix.Contract.csproj" />
+  <Folder Name="/Modules/Core/">
+    <Project Path="Modules/Core/Core.Application/Core.Application.csproj" />
+    <Project Path="Modules/Core/Core.Domain/Core.Domain.csproj" />
+    <Project Path="Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/SentriX_Core/">
-    <Project Path="SentriX_Core/Core.Api/Core.Api.csproj" />
-    <Project Path="SentriX_Core/Core.Application/Core.Application.csproj" />
-    <Project Path="SentriX_Core/Core.Domain/Core.Domain.csproj" />
-    <Project Path="SentriX_Core/Core.Infrastructure/Core.Infrastructure.csproj" />
+  <Folder Name="/Modules/Identity/">
+    <Project Path="Modules/Identity/Identity.Application/Identity.Application.csproj" />
+    <Project Path="Modules/Identity/Identity.Domain/Identity.Domain.csproj" />
+    <Project Path="Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/SentriX_Gateway/">
-    <Project Path="SentriX_Gateway/Gateway.Api/Gateway.Api.csproj" />
+  <Folder Name="/Modules/Realtime/">
+    <Project Path="Modules/Realtime/Realtime.Api/Realtime.Api.csproj" />
   </Folder>
-  <Folder Name="/SentriX_Identity/">
-    <Project Path="SentriX_Identity/Identity.Api/Identity.Api.csproj" />
-    <Project Path="SentriX_Identity/Identity.Application/Identity.Application.csproj" />
-    <Project Path="SentriX_Identity/Identity.Domain/Identity.Domain.csproj" />
-    <Project Path="SentriX_Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
-  </Folder>
-  <Folder Name="/SentriX_Realtime/">
-    <Project Path="SentriX_Realtime/Realtime.Api/Realtime.Api.csproj" />
-  </Folder>
+  <Project Path="SentriX.Api/SentriX.Api.csproj" />
 </Solution>

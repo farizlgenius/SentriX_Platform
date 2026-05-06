@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../AeroAdapter.Domain/AeroAdapter.Domain.csproj" />
-    <ProjectReference Include="..\..\Sentrix_Contract\Sentrix.Contract\Sentrix.Contract.csproj" />
   </ItemGroup>
 
   <ItemGroup>
