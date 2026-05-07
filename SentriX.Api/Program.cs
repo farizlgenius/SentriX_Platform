@@ -1,11 +1,12 @@
 using AeroAdapter.Application.Interfaces;
 using AeroAdapter.Infrastructure;
 using AeroAdapter.Infrastructure.Listener;
+using Core.Infrastructure;
 using Identity.Infrastructure;
-
+using Notifier.Infrastructure;
+using Notifier.Infrastructure.Hubs;
 using SentriX.Api.Helpers;
 using SentriX.Api.Middlewares;
-using UINotifier.Infrastructure.Hubs;
 
 namespace Identity.Api;
 
@@ -46,6 +47,8 @@ public class Program
 
         builder.Services.AddIdentityModule(builder.Configuration);
         builder.Services.AddAeroModule(builder.Configuration);
+        builder.Services.AddNotifyModule(builder.Configuration);
+        builder.Services.AddCoreModule(builder.Configuration);
 
 
 
@@ -143,7 +146,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
-        app.MapHub<UiHub>("/uiHubs");
+        app.MapHub<NotifierHub>("/notiHubs");
 
         app.Run();
     }

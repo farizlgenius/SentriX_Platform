@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../AeroAdapter.Domain/AeroAdapter.Domain.csproj" />
+    <ProjectReference Include="..\..\Notifier\Notifier.Contract\Notifier.Contract.csproj" />
   </ItemGroup>
 
   <ItemGroup>

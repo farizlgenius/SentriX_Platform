@@ -14,11 +14,11 @@ public sealed class Device
   public int Port {get; set;}
   public string Fw {get; set;} = string.Empty;
   public string Type { get; private set; }
-  public DeviceSyncStatus Status {get; private set;}
+  public string Status {get; private set;}
   public DateTime SyncedAt {get; private set;}
   public int LocationId { get; private set; }
 
-  public Device(int id, string name, string serialnumber, string mac,string ip,int port,string fw,string type,DeviceSyncStatus status,DateTime synced_at,int locationid)
+  public Device(int id, string name, string serialnumber, string mac,string ip,int port,string fw,string type,string status,DateTime synced_at,int locationid)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(Id));
     ValidationHelper.ValidateNotNullOrEmpty(name, nameof(Name));

@@ -99,7 +99,7 @@ public static class IdentityDependencyInjection
 
                       if (!string.IsNullOrEmpty(accessToken) &&
                   (path.StartsWithSegments("/sentrixHubs") ||
-                   path.StartsWithSegments("/uiHubs")))
+                   path.StartsWithSegments("/notiHubs")))
                       {
                             context.Token = accessToken;
                       }

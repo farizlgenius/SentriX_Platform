@@ -10,9 +10,9 @@ import { ProcedureEndpoint } from "../../endpoint/ProcedureEndpoint"
 import { ModeDto } from "../../model/ModeDto"
 import Select from "../../components/form/Select"
 import { ActionDto } from "../../model/Procedure/ActionDto"
-import { HardwareEndpoint } from "../../endpoint/HardwareEndpoint"
+import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint"
 import { useLocation } from "../../context/LocationContext"
-import { HardwareDto } from "../../model/Hardware/HardwareDto"
+import { HardwareDto } from "../../model/Device/HardwareDto"
 import Button from "../../components/ui/button/Button"
 import { MonitorPointEndpoint } from "../../endpoint/MonitorPointEndpoint"
 import { MonitorPointDto } from "../../model/MonitorPoint/MonitorPointDto"
@@ -160,7 +160,7 @@ export const ProcedureForm: React.FC<PropsWithChildren<FormProp<ProcedureDto>>> 
 
     {/* API Function */}
     const fetchHardware = async () => {
-        var res = await api.get(HardwareEndpoint.GET(locationId))
+        var res = await api.get(DeviceEndpoint.GET(locationId))
         if (res && res.data.data) {
             res.data.data.map((a: HardwareDto) => {
                 setHardware(prev => ([...prev, {

@@ -41,11 +41,12 @@
     <ProjectReference Include="..\Modules\AeroAdapter\AeroAdapter.Infrastructure\AeroAdapter.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\AmicoAdapter\AmicoAdapter.Contract\AmicoAdapter.Contract.csproj" />
     <ProjectReference Include="..\Modules\Core\Core.Contract\Core.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Core\Core.Infrastructure\Core.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Identity\Identity.Contract\Identity.Contract.csproj" />
     <ProjectReference Include="..\Modules\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Notifier\Notifier.Contract\Notifier.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Notifier\Notifier.Infrastructure\Notifier.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Realtime\Realtime.Contract\Realtime.Contract.csproj" />
-    <ProjectReference Include="..\Modules\UINotifier\UINotifier.Contract\UINotifier.Contract.csproj" />
-    <ProjectReference Include="..\Modules\UINotifier\UINotifier.Infrastructure\UINotifier.Infrastructure.csproj" />
     <ProjectReference Include="..\SentriX.BuildingBlock\SentriX.BuildingBlock.csproj" />
   </ItemGroup>
 

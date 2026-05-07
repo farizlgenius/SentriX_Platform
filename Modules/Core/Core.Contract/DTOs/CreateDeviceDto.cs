@@ -12,6 +12,6 @@ public record CreateDeviceDto(
       string Fw,
       string Type,
       DateTime SyncedAt, 
-      DeviceSyncStatus Status,
+      string Status,
       int LocationId
       ) ;

@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Infrastructure.Repositories;
 
-public class HelperRepository<T>(AppDbContext context) where T : Persistence.Entities.BaseEntity
+public class HelperRepository<T>(CoreDbContext context) where T : Persistence.Entities.BaseEntity
 {
-  protected readonly AppDbContext Context = context;
+  protected readonly CoreDbContext Context = context;
   public async Task<bool> IsAnyNameExceptIdAsync(string Name, int Id)
   {
     return await Context.Set<T>().AsNoTracking().AnyAsync(x => x.name.Equals(Name) && x.id != Id);

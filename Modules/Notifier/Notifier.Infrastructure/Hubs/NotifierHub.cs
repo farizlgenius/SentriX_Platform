@@ -2,10 +2,10 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-namespace UINotifier.Infrastructure.Hubs;
+namespace Notifier.Infrastructure.Hubs;
 
 [Authorize]
-public class UiHub : Hub
+public class NotifierHub : Hub
 {
       public async Task Subscribe(string topic)
     {

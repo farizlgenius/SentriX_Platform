@@ -16,7 +16,7 @@ public record UpdateDeviceDto(
       string Fw,
       string Type,
       DateTime SyncedAt, 
-      DeviceSyncStatus Status,
+      string Status,
       int LocationId
       );
 

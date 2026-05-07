@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class DeviceRepository(AppDbContext context) : IDeviceRepository
+public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
 {
   public async Task<DeviceDto> CreateAsync(Domain.Entities.Device domain)
   {

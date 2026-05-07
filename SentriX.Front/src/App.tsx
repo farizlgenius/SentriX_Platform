@@ -27,7 +27,7 @@ import Module from "./pages/Module/Module";
 import Transaction from "./pages/Transaction/Transaction";
 import ControlPoint from "./pages/ControlPoint/ControlPoint";
 import MonitorPoint from "./pages/MonitorPoint/MonitorPoint";
-import Hardware from "./pages/Hardware/Hardware";
+import Device from "./pages/Device/Device";
 import PopupExample from "./pages/UiElements/PopupExample";
 import Door from "./pages/Door/Door";
 import User from "./pages/User/User";
@@ -73,12 +73,11 @@ import SignalRService from "./services/SignalRService";
 import { IdReport } from "./model/IdReport/IdReport";
 import { useIdReport } from "./context/IdReportContext";
 import { SignalRTopic } from "./constants/signalr-constant";
-import { HardwareEndpoint } from "./endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "./endpoint/HardwareEndpoint";
 
 export default function App() {
   const navigate = useNavigate();
   const { signIn, token } = useAuth();
-  const { setIdReports } = useIdReport();
   const {
     create,
     remove,
@@ -115,12 +114,7 @@ export default function App() {
     }
   };
 
-  const fetchIdReport = async () => {
-    const res = await send.get(HardwareEndpoint.ID_REPORT(locationId));
-    if (res && res.data.data) {
-      // setIdReportList(res.data.data);
-    }
-  }
+  
 
   {
     /* License Check */
@@ -143,47 +137,14 @@ export default function App() {
     }
   };
 
- useEffect(() => {
-  const initSignalR = async () => {
-    checkLicense();
+
+useEffect(() => {
+  checkLicense();
     if (!license) {
       navigate("/license");
       return;
     }
-
-    if(!token)
-        return;
-
-    // ⭐ ensure connection is started
-    await SignalRService.startConnection();
-
-    const connection = SignalRService.getConnection();
-    if (!connection) return;
-
-    // ⭐ register handlers FIRST
-    connection.on(SignalRTopic.IDREPORT, (idreports: IdReport[]) => {
-      console.log("Received realtime update:", idreports);
-      setIdReports(idreports);
-    });
-
-    // ⭐ THEN join group
-    await SignalRService.joinGroup(SignalRTopic.IDREPORT);
-
-    // initial load
-    fetchIdReport();
-  };
-
-  initSignalR();
-
-  // ⭐ cleanup when component unmounts
-  return () => {
-    const connection = SignalRService.getConnection();
-    connection?.off(SignalRTopic.IDREPORT);
-  };
-}, []);
-
-  useEffect(() => { }, [locationId]);
-
+},[])
 
 
   return (
@@ -235,7 +196,7 @@ export default function App() {
             <Route path="/company" element={<Company />} />
             <Route path="/department" element={<Department />} />
             <Route path="/position" element={<Position />} />
-            <Route path="/hardware" element={<Hardware />} />
+            <Route path="/hardware" element={<Device />} />
             <Route path="/module" element={<Module />} />
             <Route path="/event" element={<Transaction />} />
             <Route path="/control" element={<ControlPoint />} />

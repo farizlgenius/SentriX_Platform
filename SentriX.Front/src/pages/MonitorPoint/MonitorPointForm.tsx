@@ -5,14 +5,14 @@ import Input from "../../components/form/input/InputField";
 import Select from "../../components/form/Select";
 import Button from "../../components/ui/button/Button";
 import { Options } from "../../model/Options";
-import { HardwareDto } from "../../model/Hardware/HardwareDto";
+import { HardwareDto } from "../../model/Device/HardwareDto";
 import { MonitorPointDto } from "../../model/MonitorPoint/MonitorPointDto";
 import { ModeDto } from "../../model/ModeDto";
 import { ModuleDto } from "../../model/Module/ModuleDto";
 import { HttpMethod } from "../../enum/HttpMethod";
 import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import { MonitorPointEndpoint } from "../../endpoint/MonitorPointEndpoint";
-import { HardwareEndpoint } from "../../endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint";
 import { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
 import { FormProp, FormType } from "../../model/Form/FormProp";
@@ -83,7 +83,7 @@ const MonitorPointForm: React.FC<PropsWithChildren<FormProp<MonitorPointDto>>> =
 
   {/* Controller Data */ }
   const fetchController = async () => {
-    let res = await send.get(HardwareEndpoint.GET(locationId))
+    let res = await send.get(DeviceEndpoint.GET(locationId))
     if (res?.data.data) {
       res.data.data.map((a: HardwareDto) => {
         setControllerOption((prev) => [...prev, { label: a.name, value: a.scpId }])

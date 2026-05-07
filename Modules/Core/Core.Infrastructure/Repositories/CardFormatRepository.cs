@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class CardFormatRepository(AppDbContext context) : ICardFormatRepository
+public sealed class CardFormatRepository(CoreDbContext context) : ICardFormatRepository
 {
   public async Task<CardFormatDto> CreateAsync(CardFormat domain)
   {

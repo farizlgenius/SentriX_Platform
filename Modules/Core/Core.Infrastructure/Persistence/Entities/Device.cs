@@ -10,7 +10,7 @@ public sealed class Device : BaseEntity
   public string ip { get; set; } = string.Empty;
   public int port { get; set; }
   public string fw { get; set; } = string.Empty;
-  public DeviceSyncStatus status { get; set; }
+  public string status { get; set; }
   public string type { get; set; } = DeviceType.UNKNOWN.ToString();
   public DateTime synced_at { get; set; }
   public string metadata { get; set; } = string.Empty;

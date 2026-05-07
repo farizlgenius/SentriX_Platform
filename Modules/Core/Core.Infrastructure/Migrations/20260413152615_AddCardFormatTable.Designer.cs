@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Core.Infrastructure.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(CoreDbContext))]
     [Migration("20260413152615_AddCardFormatTable")]
     partial class AddCardFormatTable
     {

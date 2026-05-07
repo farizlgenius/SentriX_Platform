@@ -4,12 +4,12 @@ import Button from "../../components/ui/button/Button";
 import { HardwareIcon, ResetIcon, ScanIcon, ToggleTranIcon, TransferIcon, UploadIcon } from "../../icons";
 import Modals from "../UiElements/Modals";
 import Helper from "../../utility/Helper";
-import HardwareForm from "../../components/form/hardware/HardwareForm";
-import { HardwareDto } from "../../model/Hardware/HardwareDto";
+import DeviceForm from "../../components/form/hardware/DeviceForm";
+import { HardwareDto } from "../../model/Device/HardwareDto";
 import { IdReport } from "../../model/IdReport/IdReport";
 import SignalRService from "../../services/SignalRService";
 import { StatusDto } from "../../model/StatusDto";
-import { HardwareEndpoint } from "../../endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint";
 import { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
 import { BaseTable } from "../UiElements/BaseTable";
@@ -25,26 +25,27 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../compon
 import { HardwareMemAllocForm } from "../../components/form/hardware/HardwareMemAllocForm";
 import { useLoading } from "../../context/LoadingContext";
 import { HardwareComponentForm } from "../../components/form/hardware/HardwareComponentForm";
-import { TranStatusDto } from "../../model/Hardware/TranStatusDto";
+import { TranStatusDto } from "../../model/Device/TranStatusDto";
 import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
-import { SetTranDto } from "../../model/Hardware/SetTranDto";
+import { SetTranDto } from "../../model/Device/SetTranDto";
 import { usePagination } from "../../context/PaginationContext";
-import { ScpStatus } from "../../model/Hardware/ScpStatus";
-import { CreateHardwareDto } from "../../model/Hardware/CreateHardwareDto";
+import { CreateDeviceDto } from "../../model/Device/CreateDeviceDto";
 import { useIdReport } from "../../context/IdReportContext";
+import { SignalRTopic } from "../../constants/signalr-constant";
+import CreateDeviceForm from "../../components/form/hardware/CreateDeviceForm";
 
 
 const HEADER = ["Name", "Type", "Mac","Firmware", "IP","Port", "Transction", "Configuration", "Status", "Action"];
 const KEY = ["name", "hardwareTypeDetail", "mac","firmware", "ip","port", "tranStatus"];
 // Hardware Page
-const ID_REPORT_KEY = [ "componentId",'mac','fw','serialNumber'];
+const ID_REPORT_KEY = [ "scpId",'mac','fw','serialNumber'];
 const ID_REPORT_TABLE_HEADER = ["Id", "Mac", "Firmware","Serial No", "Action"];
 
 
-const Hardware = () => {
+const Device = () => {
   const { FlashLoading } = useLoading();
-  const { idReports } = useIdReport();
+  const { idReports,setIdReports } = useIdReport();
   const {setPagination} = usePagination();
   const { locationId } = useLocation();
   const { toggleToast } = useToast();
@@ -55,27 +56,7 @@ const Hardware = () => {
 
   let ScanTableTemplate: ReactNode;
 
-  // const defaultCreateDto: CreateHardwareDto = {
-  //   scpId: 0,
-  //   name: "",
-  //   hardwareType: 0,
-  //   hardwareTypeDetail: "",
-  //   mac: "",
-  //   port: "",
-  //   ip: "",
-  //   firmware: "",
-  //   serialNumber: "",
-  //   portOne: false,
-  //   protocolOne: 0,
-  //   protocolOneDetail: "",
-  //   baudRateOne: 0,
-  //   portTwo: false,
-  //   protocolTwo: 0,
-  //   protocolTwoDetail: "",
-  //   baudRateTwo: 0,
-  //   locationId: 0,
-  //   isActive: false
-  // }
+
 
   const defaultDto: HardwareDto = {
     // Base
@@ -107,6 +88,20 @@ const Hardware = () => {
     lastSync: new Date()
   }
 
+   const defaultCreateDto: CreateDeviceDto = {
+     // Base
+     locationId: locationId,
+
+     // Define
+     name: "",
+     serialNumber: "",
+     fw: "",
+     componentId: 0,
+     mac: "",
+     syncedAt: new Date(),
+     type: "",
+     status: "PENDING"
+   }
   
 
 
@@ -123,29 +118,18 @@ const Hardware = () => {
 
 
   {/* IdReport */ }
-  const [idReportList, setIdReportList] = useState<IdReport[]>([]);
   const handleAddIdReport = async (data: IdReport) => {
-    // setHardwareDto({
-    //  scpId: data.scpId,
-    // name: "",
-    // hardwareType: data.type,
-    // hardwareTypeDetail: data.hardwareTypeDescription,
-    // mac: data.mac,
-    // port: data.port,
-    // ip: data.ip,
-    // firmware: data.fw,
-    // serialNumber: String(data.serialNumber),
-    // portOne: false,
-    // protocolOne: 0,
-    // protocolOneDetail: "",
-    // baudRateOne: 0,
-    // portTwo: false,
-    // protocolTwo: 0,
-    // protocolTwoDetail: "",
-    // baudRateTwo: 0,
-    // locationId: locationId,
-    // isActive: false
-    // });
+    setCreateDto({
+      name:"",
+      componentId:data.scpId,
+      mac:data.mac,
+      serialNumber:data.serialNumber,
+      fw:data.fw,
+      type:"aero",
+      syncedAt:new Date(),
+      status:"PENDING",
+      locationId:locationId
+    });
     console.log(data);
     setScan(false);
     setForm(true);
@@ -171,7 +155,9 @@ const Hardware = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            {idReports.map((data: any, i: number) => (
+            { 
+            
+             idReports.map((data: any, i: number) => (
               <TableRow key={i}>
                 {ID_REPORT_KEY.map((key: string, i: number) =>
                   <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
@@ -184,7 +170,8 @@ const Hardware = () => {
                   </Button>
                 </TableCell>
               </TableRow>
-            ))}
+            ))
+            }
 
           </TableBody>
         </Table>
@@ -196,12 +183,13 @@ const Hardware = () => {
 
 
   {/* Hardware Data */ }
-  const [hardwareDto,setHardwareDto] = useState<HardwareDto | CreateHardwareDto>(defaultDto);
+  const [deviceDto,setDeviceDto] = useState<HardwareDto>(defaultDto);
+  const [createDto,setCreateDto] = useState<CreateDeviceDto>(defaultCreateDto);
   const [data, setData] = useState<HardwareDto[]>([]);
   const [status, setStatus] = useState<StatusDto[]>([]);
   const [tranStatus, setTranStatus] = useState<TranStatusDto[]>([]);
   const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
-    const res = await send.get(HardwareEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate))
+    const res = await send.get(DeviceEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate))
     if (res && res.data.data) {
       setData(res.data.data.data);
       setPagination(res.data.data.page);
@@ -239,13 +227,13 @@ const Hardware = () => {
   }
 
   const setTran = async (data:SetTranDto[]) => {
-    var res = await send.post(HardwareEndpoint.TRAN_RANGE,data);
+    var res = await send.post(DeviceEndpoint.TRAN_RANGE,data);
     if(Helper.handleToastByResCode(res,HardwareToast.TOGGLE_TRAN,toggleToast)){
       toggleRefresh();
     }
   }
   const fetchStatus = async (id: number) => {
-    const res = await send.get(HardwareEndpoint.STATUS(id));
+    const res = await send.get(DeviceEndpoint.STATUS(id));
     console.log(res)
     if (res && res.data.data) {
       setStatus((prev) => prev.map((a) =>
@@ -263,7 +251,7 @@ const Hardware = () => {
   }
 
   const fetchTransactionStatus = async (mac: string) => {
-    const res = await send.get(HardwareEndpoint.TRAN(mac));
+    const res = await send.get(DeviceEndpoint.TRAN(mac));
     if (res && res.data.data) {
       setTranStatus((prev) => prev.map((a: TranStatusDto) =>
         a.scpId == res.data.data.scpId ? {
@@ -276,14 +264,14 @@ const Hardware = () => {
   }
 
   const resetDevice = async (ScpMac: string) => {
-    const res = await send.post(HardwareEndpoint.RESET(ScpMac))
+    const res = await send.post(DeviceEndpoint.RESET(ScpMac))
     if (Helper.handleToastByResCode(res, HardwareToast.RESET, toggleToast)) {
       toggleRefresh();
     }
   }
 
   const uploadConfig = async (id: number) => {
-    const res = await send.post(HardwareEndpoint.UPLOAD(id))
+    const res = await send.post(DeviceEndpoint.UPLOAD(id))
     if (Helper.handleToastByResCode(res, HardwareToast.UPLOAD, toggleToast)) {
       toggleRefresh();
     }
@@ -291,7 +279,7 @@ const Hardware = () => {
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setHardwareDto((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setDeviceDto((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
 
@@ -299,7 +287,7 @@ const Hardware = () => {
   {/* Handle Action Table*/ }
   const handleEdit = (data: HardwareDto) => {
     setFormType(FormType.UPDATE)
-    setHardwareDto({
+    setDeviceDto({
       // Base
       id :data.id,
       scpId: data.scpId,
@@ -332,9 +320,9 @@ const Hardware = () => {
 
   const handleRemove = (data: HardwareDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(HardwareEndpoint.DELETE(data.id));
+      const res = await send.delete(DeviceEndpoint.DELETE(data.id));
       if(Helper.handleToastByResCode(res,HardwareToast.DELETE,toggleToast)){
-        setHardwareDto(defaultDto)
+        setDeviceDto(defaultDto)
         toggleRefresh();
       }
     })
@@ -343,7 +331,7 @@ const Hardware = () => {
   }
   const handleInfo = (data:HardwareDto) => {
     setFormType(FormType.INFO);
-    setHardwareDto(data);
+    setDeviceDto(data);
     setForm(true);
   }
   {/* Handle Click */ }
@@ -380,7 +368,7 @@ const Hardware = () => {
             select.map(async (a: HardwareDto) => {
               data.push(a.id)
             })
-            var res = await send.post(HardwareEndpoint.DELETE_RANGE, data)
+            var res = await send.post(DeviceEndpoint.DELETE_RANGE, data)
             if (Helper.handleToastByResCode(res, HardwareToast.DELETE_RANGE, toggleToast)) {
               setRemove(false);
               toggleRefresh();
@@ -391,22 +379,22 @@ const Hardware = () => {
         break;
       case "update":
         setConfirmUpdate(() => async () => {
-          const res = await send.put(HardwareEndpoint.UPDATE,hardwareDto);
+          const res = await send.put(DeviceEndpoint.UPDATE,deviceDto);
           if(Helper.handleToastByResCode(res,HardwareToast.UPDATE,toggleToast)){
             setForm(false);
             toggleRefresh();
-            setHardwareDto(defaultDto);
+            setDeviceDto(defaultDto);
           }
         })
         setUpdate(true);
         break;
       case "create":
         setConfirmCreate(() => async () => {
-          const res = await send.post(HardwareEndpoint.CREATE,hardwareDto);
+          const res = await send.post(DeviceEndpoint.CREATE,createDto);
           if(Helper.handleToastByResCode(res,HardwareToast.CREATE,toggleToast)){
             toggleRefresh();
             setForm(false);
-            setHardwareDto(defaultDto);
+            setCreateDto(defaultCreateDto);
           }
         })
         setCreate(true);
@@ -420,6 +408,8 @@ const Hardware = () => {
         break;
       case "close":
         setForm(false)
+        setCreateDto(defaultCreateDto)
+        setDeviceDto(defaultDto)
         break;
       case "reset":
         if (select.length != 0) {
@@ -449,60 +439,53 @@ const Hardware = () => {
   {/* checkBox */ }
   const [select, setSelect] = useState<HardwareDto[]>([]);
 
+  const fetchIdReport = async () => {
+    var res = await send.get(DeviceEndpoint.ID_REPORT);
+   setIdReports(res.data);
+  }
+
 
   {/* UseEffect */ }
   useEffect(() => {
-    var connection = SignalRService.getConnection(token);
-    connection.on("SCP.STATUS", (status:ScpStatus) => {
-      console.log(status);
-      fetchStatus(status.id);
+    const initSignalR = async () => {
 
-    });
 
-    connection.on("test",(message:string) => {
-      console.log(message)
-    })
+      if (!token)
+        return;
 
-    connection.on("SCP.TRAN", (data: TranStatusDto) => {
-      console.log(data)
-      setTranStatus((prev) => prev.map((a) =>
-        a.scpId == data.scpId
-          ? {
-            ...a,
-            macAddress: data.scpId,
-            capacity: data.capacity,
-            oldest: data.oldest,
-            lastReport: data.lastReport,
-            lastLog: data.lastLog,
-            disabled: data.disabled,
-            status: data.status
-          }
-          : {
-            ...a
-          }
-      )
-      );
-    })
+      // ⭐ ensure connection is started
+      await SignalRService.startConnection();
 
-    connection.on("UploadStatus", (message: string, isFinish: boolean) => {
-      setUploadMessage(message);
-      console.log(message);
-      console.log(isFinish)
-      if (isFinish) {
-        setTimeout(() => {
-          setIsUploading(false);
-        }, 500)
+      const connection = SignalRService.getConnection();
+      if (!connection) return;
 
+      // ⭐ register handlers FIRST
+      connection.on(SignalRTopic.IDREPORT, (idreports: IdReport[]) => {
+        console.log("Received realtime update:", idreports);
+        setIdReports(idreports);
+      });
+
+      // ⭐ THEN join group
+      try {
+        await SignalRService.joinGroup(SignalRTopic.IDREPORT);
+        console.log("Joined group:");
+      } catch (err) {
+        console.error("Subscribe error:", err);
       }
-      connection.on("UploadFinish", () => {
-        setIsUploading(false);
-      })
-    });
+
+
+      // initial load
+      fetchIdReport();
+    };
+
+    initSignalR();
+
 
     return () => {
-      //SignalRService.stopConnection()
+      const connection = SignalRService.getConnection();
+      connection?.off(SignalRTopic.IDREPORT);
     };
-  }, [refresh,locationId]);
+  }, [refresh, locationId]);
 
 
   const actionBtn: ActionButton[] = [
@@ -528,7 +511,7 @@ const Hardware = () => {
       buttonName: "Scan",
       lable: "scan",
       icon: <>
-        <ScanIcon className={idReportList.length != 0 ? "animate-ping" : ""} />
+        <ScanIcon className={idReports.length != 0 ? "animate-ping" : ""} />
       </>
     }
   ];
@@ -603,17 +586,25 @@ const Hardware = () => {
     {
       icon: <HardwareIcon />,
       label: "Hardware",
-      content: <HardwareForm handleClick={handleClickWithEvent}  dto={hardwareDto} setDto={setHardwareDto} type={formType} />
+      content: <DeviceForm handleClick={handleClickWithEvent}  dto={deviceDto} setDto={setDeviceDto} type={formType} />
     }, {
       icon: <HardwareIcon />,
       label: "Memory Allocate",
-      content: <HardwareMemAllocForm data={hardwareDto} />
+      content: <HardwareMemAllocForm data={deviceDto} />
     }, {
       icon: <HardwareIcon />,
       label: "Component",
-      content: <HardwareComponentForm data={hardwareDto} />
+      content: <HardwareComponentForm data={deviceDto} />
     }
   ];
+
+  const createAeroContent: FormContent[] = [
+    {
+      icon: <HardwareIcon />,
+      label: "Hardware",
+      content: <CreateDeviceForm handleClick={handleClickWithEvent}  dto={createDto} setDto={setCreateDto} type={formType} />
+    }
+  ]
 
 
   return (
@@ -630,8 +621,12 @@ const Hardware = () => {
       <div className="space-y-6">
         {form ?
           <>
-            <BaseForm tabContent={tabContent} />
-            {/* <HardwareForm handleClickWithEvent={handleClickWithEvent} handleChange={handleChange} data={hardwareDto} isDetail={false} /> */}
+            {formType == FormType.CREATE ?
+              <BaseForm tabContent={createAeroContent} header="Create Device Form" desc="Form used for create device." />
+             :
+              <BaseForm tabContent={tabContent} header="Device Form" desc="Please see detail for device form." />
+             }
+            
           </>
 
           :
@@ -652,4 +647,4 @@ const Hardware = () => {
 }
 
 
-export default Hardware;
+export default Device;

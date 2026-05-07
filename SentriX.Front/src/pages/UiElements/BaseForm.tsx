@@ -4,9 +4,11 @@ import { FormContent } from "../../model/Form/FormContent";
 
 interface FormProp {
   tabContent: FormContent[];
+  header:string;
+  desc:string;
 }
 
-export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent }) => {
+export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,header,desc }) => {
   const [activeTab, setActiveTab] = useState<string>(tabContent[0].label);
   const activeStyle = "border-brand-500 bg-brand-50 text-brand-600 shadow-sm dark:border-brand-400 dark:bg-brand-400/20 dark:text-brand-300";
   const inactiveStyle = "border-transparent bg-transparent text-gray-500 hover:border-brand-200 hover:bg-[var(--app-panel-muted)] hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200";
@@ -15,10 +17,10 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent }) 
   return (
     <div className="rounded-[32px] border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] p-6 shadow-theme-xs lg:p-8">
       <div className="mb-6 rounded-[24px] bg-[linear-gradient(180deg,rgba(59,130,246,0.10),rgba(255,255,255,0))] p-5 dark:bg-[linear-gradient(180deg,rgba(59,130,246,0.18),rgba(17,24,39,0))]">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-500">Workspace Form</p>
-        <h2 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">Focused editing flow</h2>
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-500">SentriX</p>
+        <h2 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">{header}</h2>
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          Clean sections, minimal chrome, and the same interaction style across the project.
+          {desc}
         </p>
       </div>
 

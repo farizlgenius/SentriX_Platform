@@ -2,16 +2,16 @@ import { PropsWithChildren, useEffect, useState } from "react"
 import Badge from "../../ui/badge/Badge"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../ui/table"
 import SignalRService from "../../../services/SignalRService"
-import { MemoryDto as MemoryDto } from "../../../model/Hardware/MemoryDto"
+import { MemoryDto as MemoryDto } from "../../../model/Device/MemoryDto"
 import { send } from "../../../api/api"
-import { HardwareEndpoint } from "../../../endpoint/HardwareEndpoint"
+import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint"
 import { useToast } from "../../../context/ToastContext"
-import { HardwareDto } from "../../../model/Hardware/HardwareDto"
-import { MemoryAllocateDto } from "../../../model/Hardware/MemoryAllocateDto"
-import { CreateHardwareDto } from "../../../model/Hardware/CreateHardwareDto"
+import { HardwareDto } from "../../../model/Device/HardwareDto"
+import { MemoryAllocateDto } from "../../../model/Device/MemoryAllocateDto"
+import { CreateDeviceDto } from "../../../model/Device/CreateDeviceDto"
 
 interface HardwareMemAllocFormInterface {
-    data:HardwareDto | CreateHardwareDto;
+    data:HardwareDto | CreateDeviceDto;
 }
 
 export const HardwareMemAllocForm:React.FC<PropsWithChildren<HardwareMemAllocFormInterface>> = ({data}) => {
@@ -19,7 +19,7 @@ export const HardwareMemAllocForm:React.FC<PropsWithChildren<HardwareMemAllocFor
     const [memAllocs, setMemAllocs] = useState<MemoryDto[]>([]);
 
     const fetchData = async () => {
-        const res = await send.post(HardwareEndpoint.VERIFY_MEM(data.mac))
+        const res = await send.post(DeviceEndpoint.VERIFY_MEM(data.mac))
         // if(Helper.handleToastByResCode(res,ToastMessage.GET_SCP_STRUCTURE,toggleToast)){}
     }
 

@@ -14,8 +14,8 @@ import SignalRService from "../../../services/SignalRService";
 import { ScanCardStatus } from "../../../model/User/ScanCardStatus";
 import { CredentialEndpoint } from "../../../endpoint/CredentialEndpoint";
 import { send } from "../../../api/api";
-import { HardwareEndpoint } from "../../../endpoint/HardwareEndpoint";
-import { HardwareDto } from "../../../model/Hardware/HardwareDto";
+import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint";
+import { HardwareDto } from "../../../model/Device/HardwareDto";
 import { DoorEndpoint } from "../../../endpoint/DoorEndpoint";
 import { DoorDto } from "../../../model/Door/DoorDto";
 import { ScanCardDto } from "../../../model/User/ScanCard";
@@ -160,7 +160,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
     }
 
     const fetchController = async () => {
-        const res = await send.get(HardwareEndpoint.GET(locationId))
+        const res = await send.get(DeviceEndpoint.GET(locationId))
         if (res && res.data.data) {
             res.data.data.map((a: HardwareDto) => {
                 setControllerOption(prev => ([...prev, {

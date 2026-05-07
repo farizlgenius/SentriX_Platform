@@ -6,16 +6,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AeroAdapter.Application.Memories;
 
-public sealed class IdReports(IServiceScopeFactory sp)
+public sealed class IdReports
 {
-     
-       public List<Domain.Entities.IdReport> IdReportInMemory {get; set;} = new List<Domain.Entities.IdReport>();
 
-       public List<IdReportDto> GetIdReport()
+      public List<Domain.Entities.IdReport> IdReportInMemory { get; set; } = new List<Domain.Entities.IdReport>();
+
+      public List<IdReportDto> GetIdReport()
       {
-                  List<IdReportDto> dtos = new List<IdReportDto>();
-            
-            foreach(var id in IdReportInMemory)
+            List<IdReportDto> dtos = new List<IdReportDto>();
+
+            foreach (var id in IdReportInMemory)
             {
                   dtos.Add(
                         new IdReportDto(
@@ -28,36 +28,40 @@ public sealed class IdReports(IServiceScopeFactory sp)
             }
 
             return dtos;
-      }     
+      }
 
-       public async Task AddIdReport(IdReport reports)
+      public async Task AddIdReport(IdReport reports)
       {
+            if (IdReportInMemory.Any(x => x.Mac.Equals(reports.Mac)))
+                  return;
 
-            
+            IdReportInMemory.Add(reports);
+
+
       }
 
       public void RemoveIdReport(string mac)
       {
             var data = IdReportInMemory.Where(x => x.Mac.Equals(mac)).FirstOrDefault();
-            if(data == null)
+            if (data == null)
                   return;
 
             IdReportInMemory.Remove(data);
       }
 
-      public void UpdateIp(string mac,string ip)
+      public void UpdateIp(string mac, string ip)
       {
             var idreport = IdReportInMemory.FirstOrDefault(x => x.Mac.Equals(mac));
-            if(idreport == null)
+            if (idreport == null)
                   return;
 
             idreport.UpdateIp(ip);
       }
 
-      public void UpdatePort(string mac,int port )
+      public void UpdatePort(string mac, int port)
       {
             var idreport = IdReportInMemory.FirstOrDefault(x => x.Mac.Equals(mac));
-            if(idreport == null)
+            if (idreport == null)
                   return;
 
             idreport.UpdatePort(port);

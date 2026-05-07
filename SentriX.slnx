@@ -25,11 +25,11 @@
     <Project Path="Modules/Identity/Identity.Domain/Identity.Domain.csproj" />
     <Project Path="Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/Modules/UINotifier/">
-    <Project Path="Modules/UINotifier/UINotifier.Application/UINotifier.Application.csproj" />
-    <Project Path="Modules/UINotifier/UINotifier.Contract/UINotifier.Contract.csproj" />
-    <Project Path="Modules/UINotifier/UINotifier.Domain/UINotifier.Domain.csproj" />
-    <Project Path="Modules/UINotifier/UINotifier.Infrastructure/UINotifier.Infrastructure.csproj" />
+  <Folder Name="/Modules/Notifier/">
+    <Project Path="Modules/Notifier/Notifier.Application/Notifier.Application.csproj" />
+    <Project Path="Modules/Notifier/Notifier.Contract/Notifier.Contract.csproj" />
+    <Project Path="Modules/Notifier/Notifier.Domain/Notifier.Domain.csproj" />
+    <Project Path="Modules/Notifier/Notifier.Infrastructure/Notifier.Infrastructure.csproj" />
   </Folder>
   <Project Path="SentriX.Api/SentriX.Api.csproj" />
   <Project Path="SentriX.BuildingBlock/SentriX.BuildingBlock.csproj" />

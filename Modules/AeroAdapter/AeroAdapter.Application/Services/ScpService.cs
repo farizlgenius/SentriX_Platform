@@ -6,11 +6,13 @@ using AeroAdapter.Domain.Entities;
 using AeroAdapter.Domain.Enums;
 using AeroAdapter.Domain.Helpers;
 using Application.Contracts.GeneratedDtos;
+using Notifier.Contract.Constants;
+using UINotifier.Contract.Interfaces;
 
 
 namespace AeroAdapter.Application.Services;
 
-public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWriter writer, ISioWriter sioWriter, IMpWriter mpWriter,IdReports reports) : IScpService
+public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWriter writer, ISioWriter sioWriter, IMpWriter mpWriter,IdReports reports,INotifier notifier) : IScpService
 {
      
       public async Task AssignIpAddressAsync(int ScpId, SCPReplyMessageDto.CC_WEB_CONFIG_NETWORKDto message)
@@ -60,12 +62,14 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
                         );
                   
                   await reports.AddIdReport(report);
+                  await repo.AddAsync(id.scp_id,UtilitiesHelper.ByteToHexStr(id.mac_addr));
+
+                  await notifier.SendToTopic(NotifierTopic.IDREPORT,reports.IdReportInMemory);
             }
             else
             {
                   // Update ScpId if already Exists
-                  var status = await repo.UpdateAsync(id.scp_id,UtilitiesHelper.ByteToHexStr(id.mac_addr));
-                  var dto = new DeviceDto(id.scp_id,UtilitiesHelper.ByteToHexStr(id.mac_addr),id.serial_number.ToString(),$"{id.sft_rev_major}.{id.sft_rev_minor}",string.Empty,DateTime.UtcNow);
+                  await repo.UpdateAsync(id.scp_id,UtilitiesHelper.ByteToHexStr(id.mac_addr));
 
                   // Publish Broker for update
             }
@@ -92,35 +96,35 @@ public sealed class ScpService(IScpRepository repo, IMpRepository mpRepo, IScpWr
                   return;
 
 
-            // Read Structure 
-            if (!await writer.SCPStructureStatusRead(id.scp_id,
-                  [
-                        (short)SCPStructure.SCPSID_TRAN,
-                        (short)SCPStructure.SCPSID_TZ,
-                        (short)SCPStructure.SCPSID_HOL,
-                        (short)SCPStructure.SCPSID_MSP1,
-                        (short)SCPStructure.SCPSID_SIO,
-                        (short)SCPStructure.SCPSID_MP,
-                        (short)SCPStructure.SCPSID_CP,
-                        (short)SCPStructure.SCPSID_ACR,
-                        (short)SCPStructure.SCPSID_ALVL,
-                        (short)SCPStructure.SCPSID_TRIG,
-                        (short)SCPStructure.SCPSID_PROC,
-                        (short)SCPStructure.SCPSID_MPG,
-                        (short)SCPStructure.SCPSID_AREA,
-                        (short)SCPStructure.SCPSID_EAL,
-                        (short)SCPStructure.SCPSID_CRDB
-                  ]
-            ))
-                  return;
+            // // Read Structure 
+            // if (!await writer.SCPStructureStatusRead(id.scp_id,
+            //       [
+            //             (short)SCPStructure.SCPSID_TRAN,
+            //             (short)SCPStructure.SCPSID_TZ,
+            //             (short)SCPStructure.SCPSID_HOL,
+            //             (short)SCPStructure.SCPSID_MSP1,
+            //             (short)SCPStructure.SCPSID_SIO,
+            //             (short)SCPStructure.SCPSID_MP,
+            //             (short)SCPStructure.SCPSID_CP,
+            //             (short)SCPStructure.SCPSID_ACR,
+            //             (short)SCPStructure.SCPSID_ALVL,
+            //             (short)SCPStructure.SCPSID_TRIG,
+            //             (short)SCPStructure.SCPSID_PROC,
+            //             (short)SCPStructure.SCPSID_MPG,
+            //             (short)SCPStructure.SCPSID_AREA,
+            //             (short)SCPStructure.SCPSID_EAL,
+            //             (short)SCPStructure.SCPSID_CRDB
+            //       ]
+            // ))
+            //       return;
 
 
 
 
 
-            // Send to get IP and Port 
-            await writer.ReadsConfiguration(id.scp_id, WebConfigReadType.NetworkSettingss);
-            await writer.ReadsConfiguration(id.scp_id, WebConfigReadType.HostCommunicationPrimarySettings);
+            // // Send to get IP and Port 
+            // await writer.ReadsConfiguration(id.scp_id, WebConfigReadType.NetworkSettingss);
+            // await writer.ReadsConfiguration(id.scp_id, WebConfigReadType.HostCommunicationPrimarySettings);
 
 
       }

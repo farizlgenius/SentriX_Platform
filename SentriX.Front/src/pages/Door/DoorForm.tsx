@@ -10,7 +10,7 @@ import Helper from '../../utility/Helper';
 import { DoorDto } from '../../model/Door/DoorDto';
 import { Options } from '../../model/Options';
 import { ModuleDto } from '../../model/Module/ModuleDto';
-import { HardwareDto } from '../../model/Hardware/HardwareDto';
+import { HardwareDto } from '../../model/Device/HardwareDto';
 import { ModeDto } from '../../model/ModeDto';
 import { TimeZoneDto } from '../../model/TimeZone/TimeZoneDto';
 import Switch from '../../components/form/switch/Switch';
@@ -24,7 +24,7 @@ import { RequestExitDto } from '../../model/RequestExit/RequestExitDto';
 import { MultiselectOption } from '../../model/MultiselectOption';
 import { CardFormatDto } from '../../model/CardFormat/CardFormatDto';
 import { ModuleEndpoint } from '../../endpoint/ModuleEndpoint';
-import { HardwareEndpoint } from '../../endpoint/HardwareEndpoint';
+import { DeviceEndpoint } from '../../endpoint/HardwareEndpoint';
 import { DoorEndpoint } from '../../endpoint/DoorEndpoint';
 import { MonitorPointEndpoint } from '../../endpoint/MonitorPointEndpoint';
 import { ControlPointEndpoint } from '../../endpoint/ControlPointEndpoint';
@@ -185,7 +185,7 @@ var defaultReader: ReaderDto = {
   const [controllerOption, setControllerOption] = useState<Options[]>([]);
 
   const fetchScp = async () => {
-    const res = await send.get(HardwareEndpoint.GET(locationId));
+    const res = await send.get(DeviceEndpoint.GET(locationId));
     Logger.info(res)
     if (res && res.data.data) {
       res.data.data.map((a: HardwareDto) => {

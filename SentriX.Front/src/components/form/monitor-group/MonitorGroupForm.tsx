@@ -7,9 +7,9 @@ import Select from "../Select";
 import Button from "../../ui/button/Button";
 import { useLocation } from "../../../context/LocationContext";
 import { send } from "../../../api/api";
-import { HardwareEndpoint } from "../../../endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint";
 import { Options } from "../../../model/Options";
-import { HardwareDto } from "../../../model/Hardware/HardwareDto";
+import { HardwareDto } from "../../../model/Device/HardwareDto";
 import { ModeDto } from "../../../model/ModeDto";
 import { MonitorGroupEndpoint } from "../../../endpoint/MonitorGroupEndpoint";
 import { MonitorGroupListDto } from "../../../model/MonitorGroup/MonitorGroupListDto";
@@ -69,7 +69,7 @@ export const MonitorGroupForm: React.FC<PropsWithChildren<FormProp<MonitorGroupD
     }
 
     const fetchHardware = async () => {
-        const res = await send.get(HardwareEndpoint.GET(locationId))
+        const res = await send.get(DeviceEndpoint.GET(locationId))
         if (res && res.data.data) {
             res.data.data.map((a: HardwareDto) => {
                 setHardwareOptions(prev => ([...prev, {

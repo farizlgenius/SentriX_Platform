@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class FeatureRepository(AppDbContext context) : IFeatureRepository
+public sealed class FeatureRepository(CoreDbContext context) : IFeatureRepository
 {
       public async Task<List<FeatureDto>> GetAsync()
       {

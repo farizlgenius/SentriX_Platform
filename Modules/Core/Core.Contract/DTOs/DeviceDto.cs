@@ -13,7 +13,7 @@ public record DeviceDto(
       int Port,
       string Fw,
       string Type, 
-      DeviceSyncStatus Status,
+      string Status,
       DateTime SyncedAt,
       int LocationId
       );

@@ -3,5 +3,5 @@ export enum SignalRTopic {
 }
 
 export enum SignalRHub {
-      UI = "/uiHubs"
+      UI = "/notiHubs"
 }

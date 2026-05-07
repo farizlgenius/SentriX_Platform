@@ -3,15 +3,15 @@ import Badge from "../../ui/badge/Badge"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../ui/table"
 import SignalRService from "../../../services/SignalRService";
 import { useToast } from "../../../context/ToastContext";
-import { HardwareEndpoint } from "../../../endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint";
 import { send } from "../../../api/api";
-import { VerifyHardwareDeviceConfigDto } from "../../../model/Hardware/VerifyHardwareDeviceConfigDto";
-import { HardwareDto } from "../../../model/Hardware/HardwareDto";
-import { ScpConfiguration } from "../../../model/Hardware/ScpConfiguraion";
-import { CreateHardwareDto } from "../../../model/Hardware/CreateHardwareDto";
+import { VerifyHardwareDeviceConfigDto } from "../../../model/Device/VerifyHardwareDeviceConfigDto";
+import { HardwareDto } from "../../../model/Device/HardwareDto";
+import { ScpConfiguration } from "../../../model/Device/ScpConfiguraion";
+import { CreateDeviceDto } from "../../../model/Device/CreateDeviceDto";
 
 interface HardwareComponentFormInterface {
-    data: HardwareDto | CreateHardwareDto;
+    data: HardwareDto | CreateDeviceDto;
 }
 
 export const HardwareComponentForm:React.FC<PropsWithChildren<HardwareComponentFormInterface>> = ({data}) => {
@@ -19,7 +19,7 @@ export const HardwareComponentForm:React.FC<PropsWithChildren<HardwareComponentF
     const [deviceConfig, setDeviceConfig] = useState<VerifyHardwareDeviceConfigDto[]>([]);
 
     const fetchData = async () => {
-        const res = await send.post(HardwareEndpoint.VERIFY_COM(data.mac))
+        const res = await send.post(DeviceEndpoint.VERIFY_COM(data.mac))
         if(res && res.data.data){
              setDeviceConfig(res.data.data)
         }

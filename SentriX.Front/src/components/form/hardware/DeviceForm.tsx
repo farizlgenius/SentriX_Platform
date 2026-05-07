@@ -2,16 +2,16 @@ import { ChangeEvent, PropsWithChildren, useEffect, useState } from "react";
 import Label from "../Label.tsx";
 import Input from "../input/InputField.tsx";
 import Button from "../../ui/button/Button.tsx";
-import { HardwareDto } from "../../../model/Hardware/HardwareDto.ts";
+import { HardwareDto } from "../../../model/Device/HardwareDto.ts";
 import { FormProp, FormType } from "../../../model/Form/FormProp.ts";
 import Select from "../Select.tsx";
 import { Options } from "../../../model/Options.ts";
 import { send } from "../../../api/api.ts";
-import { HardwareEndpoint } from "../../../endpoint/HardwareEndpoint.ts";
+import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint.ts";
 import { ModeDto } from "../../../model/ModeDto.ts";
 import Switch from "../switch/Switch.tsx";
 import { ModuleEndpoint } from "../../../endpoint/ModuleEndpoint.ts";
-import { CreateHardwareDto } from "../../../model/Hardware/CreateHardwareDto.ts";
+import { CreateDeviceDto } from "../../../model/Device/CreateDeviceDto.ts";
 
 
 
@@ -19,7 +19,7 @@ import { CreateHardwareDto } from "../../../model/Hardware/CreateHardwareDto.ts"
 
 
 
-const HardwareForm: React.FC<PropsWithChildren<FormProp<HardwareDto | CreateHardwareDto>>> = ({ dto, type, handleClick, setDto }) => {
+const DeviceForm: React.FC<PropsWithChildren<FormProp<HardwareDto | CreateDeviceDto>>> = ({ dto, type, handleClick, setDto }) => {
   const [device, setDevice] = useState<number>(-1);
   const [deviceOptions, setDeviceOptions] = useState<Options[]>([])
   const [protocol, setProtocol] = useState<Options[]>([]);
@@ -29,7 +29,7 @@ const HardwareForm: React.FC<PropsWithChildren<FormProp<HardwareDto | CreateHard
   }
 
   const fetchType = async () => {
-    const res = await send.get(HardwareEndpoint.TYPE);
+    const res = await send.get(DeviceEndpoint.TYPE);
     if (res && res.data.data) {
       res.data.data.map((a: ModeDto) => {
         setDeviceOptions(prev => ([...prev, {
@@ -208,4 +208,4 @@ const HardwareForm: React.FC<PropsWithChildren<FormProp<HardwareDto | CreateHard
   </>);
 }
 
-export default HardwareForm;
+export default DeviceForm;
