@@ -5,7 +5,7 @@ using Identity.Contract.DTOs;
 
 namespace SentriX.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/identity/[controller]")]
     [ApiController]
     public class DepartmentController(IDepartmentService service) : ControllerBase
     {

@@ -6,12 +6,11 @@ using Identity.Domain.Entities;
 using Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using SentriX.BuildingBlock.Exceptions;
-using SentriX.Modules.Identity.Identity.Application.Interfaces;
 
 
 namespace Identity.Infrastructure.Repositories;
 
-public class LocationRepository(AppDbContext context) : ILocationRepository
+public class LocationRepository(IdentityDbContext context) : ILocationRepository
 {
   public async Task<LocationDto> AddAsync(Location location)
   {

@@ -208,7 +208,7 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue,ILogger<Scp
                             break;
                         case (int)enSCPReplyType.enSCPReplyIDReport:
                             var scp = scope.ServiceProvider.GetRequiredService<IScpService>();
-                            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                            var db = scope.ServiceProvider.GetRequiredService<AeroDbContext>();
                             await scp.HandleIdReport(message.id);
                             break;
                         case (int)enSCPReplyType.enSCPReplyCommStatus:

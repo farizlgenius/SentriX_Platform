@@ -3,10 +3,11 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
-using SentriX.Api.Helpers;
 using Identity.Contract.Interfaces;
+using Microsoft.Extensions.Logging;
+using Identity.Infrastructure.Helpers;
 
-namespace SentriX.Api.Authentication;
+namespace Identity.Infrastructure.Authentication;
 
 public class ApiKeyAuthenticationOptions : AuthenticationSchemeOptions { }
 public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>

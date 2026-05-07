@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AeroAdapter.Infrastructure.Writer;
 
-public sealed class DriverWriter(AppDbContext context,ILogger<DriverWriter> logger) : BaseWriter,IDriverWriter
+public sealed class DriverWriter(AeroDbContext context,ILogger<DriverWriter> logger) : BaseWriter,IDriverWriter
 {
     public bool SystemLevelSpecification()
     {

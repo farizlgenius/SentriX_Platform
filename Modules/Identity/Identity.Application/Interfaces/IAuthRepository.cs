@@ -4,7 +4,7 @@
 
 using Identity.Contract.DTOs;
 
-namespace SentriX.Modules.Identity.Identity.Application.Interfaces;
+namespace Identity.Application.Interfaces;
 
 public interface IAuthRepository
 {

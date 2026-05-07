@@ -4,14 +4,14 @@ using Identity.Domain.Enums;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
-using SentriX.Modules.Identity.Identity.Application.Interfaces;
 
 using Identity.Contract.Interfaces;
 using Identity.Contract.DTOs;
+using Identity.Application.Interfaces;
 
 namespace Identity.Infrastructure.Repositories;
 
-public class AuthRepository(AppDbContext context) : IAuthRepository
+public class AuthRepository(IdentityDbContext context) : IAuthRepository
 {
   public async Task<bool> IsAnyUserExistsAsync(string username)
   {

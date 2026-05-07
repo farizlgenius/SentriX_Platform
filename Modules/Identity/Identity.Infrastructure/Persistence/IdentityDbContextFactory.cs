@@ -6,12 +6,12 @@ using System.IO;
 
 namespace Identity.Infrastructure.Persistence;
 
-public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+public class IdentityDbContextFactory : IDesignTimeDbContextFactory<IdentityDbContext>
 {
-  public AppDbContext CreateDbContext(string[] args)
+  public IdentityDbContext CreateDbContext(string[] args)
   {
     // VERY IMPORTANT: move up to API project folder
-    var basePath = Path.Combine(Directory.GetCurrentDirectory(), "../Identity.API");
+    var basePath = Directory.GetCurrentDirectory();
 
     var config = new ConfigurationBuilder()
         .SetBasePath(basePath)
@@ -20,10 +20,10 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 
     var connectionString = config.GetConnectionString("PostgresConnection");
 
-    var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+    var optionsBuilder = new DbContextOptionsBuilder<IdentityDbContext>();
     optionsBuilder.UseNpgsql(connectionString);
 
-    return new AppDbContext(optionsBuilder.Options);
+    return new IdentityDbContext(optionsBuilder.Options);
   }
 }
 

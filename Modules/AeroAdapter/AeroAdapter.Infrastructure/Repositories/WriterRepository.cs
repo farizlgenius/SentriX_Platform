@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AeroAdapter.Infrastructure.Repositories;
 
-public class WriterRepository(AppDbContext context) : IWriterRepository
+public class WriterRepository(AeroDbContext context) : IWriterRepository
 {
      
 

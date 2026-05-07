@@ -5,8 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Infrastructure.Persistence;
 
-public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : DbContext(options)
 {
+  public const string Schema = "Identity";
   public DbSet<Company> Companies { get; set; }
   public DbSet<Department> Departments { get; set; }
   public DbSet<Location> Locations { get; set; }
@@ -25,6 +26,9 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     base.OnModelCreating(modelBuilder);
+
+    // ⭐ Module schema
+    modelBuilder.HasDefaultSchema(Schema);
 
     foreach (var entity in modelBuilder.Model.GetEntityTypes())
     {

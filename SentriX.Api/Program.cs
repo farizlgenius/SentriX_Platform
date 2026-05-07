@@ -1,3 +1,8 @@
+using AeroAdapter.Application.Interfaces;
+using AeroAdapter.Infrastructure;
+using AeroAdapter.Infrastructure.Listener;
+using Identity.Infrastructure;
+
 using SentriX.Api.Helpers;
 using SentriX.Api.Middlewares;
 using UINotifier.Infrastructure.Hubs;
@@ -25,11 +30,6 @@ public class Program
         // ==========================
         CacheSettingHelper.RedisConfiguration(builder);
 
-        // ==========================
-        // RabbitMQ DI service setting
-        // ==========================
-        // builder.Services.AddSingleton<IRabbitMqPersistentConnection, RabbitMqPersistentConnection>();
-        // builder.Services.AddScoped<IMessagePublisher, RabbitMqPublisher>();
 
         // ==========================
         // Setting Routing option
@@ -41,20 +41,24 @@ public class Program
         });
 
         // ==========================
-        // Database connection
+        // Identity Module
         // ==========================
-        DatabaseConnectionSettingHelper.DatabaseConnectionHelper(builder);
 
-        // ==========================
-        // Jwt Setting
-        // ==========================
-        AuthenticationSettingHelper.AuthenticationSetting(builder);
+        builder.Services.AddIdentityModule(builder.Configuration);
+        builder.Services.AddAeroModule(builder.Configuration);
+
+
 
 
         // ==========================
         // Adding App Dependency Injection
         // ==========================
         DISettingHelper.DISetting(builder);
+
+        // ==========================
+        // Adding App Dependency Injection
+        // ==========================
+        CorsSettingHelper.Cors(builder);
 
         // ==========================
         // Add Authorization
@@ -81,12 +85,58 @@ public class Program
         /// ==========================
         app.UseMiddleware<GlobalException>();
 
+
+        /// ==========================
+        /// Driver
+        /// ==========================
+        app.UseMiddleware<GlobalException>();
+        var readDriver = app.Services.GetRequiredService<AeroMessageListener>();
+        // var writer = app.Services.GetRequiredService<ICommandWriter>();
+        readDriver.TurnOnDebug();
+
+
+        using (var scope = app.Services.CreateScope())
+            {
+                var w = scope.ServiceProvider.GetRequiredService<IDriverWriter>();
+                var w2 = scope.ServiceProvider.GetRequiredService<IScpWriter>();
+                
+                // Now you can safely use sys here
+                if(!w.SystemLevelSpecification())
+                {
+                    Console.WriteLine("Initial driver failed. Shutting down app...");
+                    app.Lifetime.StopApplication(); // graceful shutdown
+                }
+
+                // Now you can safely use sys here
+                if(!w2.CreateChannel())
+                {
+                   Console.WriteLine("Initial driver failed. Shutting down app...");
+                    app.Lifetime.StopApplication(); // graceful shutdown
+                }
+            }
+
+            app.Lifetime.ApplicationStarted.Register(() =>
+{
+             _ = Task.Run(() => readDriver.GetTransactionUntilShutDownAsync());
+            });
+
+
+            app.Lifetime.ApplicationStopping.Register(async () =>
+            {
+                
+                readDriver.SetShutDownFlag();
+                readDriver.TurnOffDebug();
+                
+            });
+
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseCors("CorsPolicy");
 
         app.UseHttpsRedirection();
         app.UseAuthentication();

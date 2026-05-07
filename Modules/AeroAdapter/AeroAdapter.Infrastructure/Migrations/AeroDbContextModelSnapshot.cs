@@ -10,13 +10,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AeroAdapter.Infrastructure.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AeroDbContext))]
+    partial class AeroDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("Aero")
                 .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -103,7 +104,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("AccessDatabaseSpecifications");
+                    b.ToTable("AccessDatabaseSpecifications", "Aero");
 
                     b.HasData(
                         new
@@ -178,7 +179,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("CreateChannels");
+                    b.ToTable("CreateChannels", "Aero");
 
                     b.HasData(
                         new
@@ -242,7 +243,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("DriverConfigurations");
+                    b.ToTable("DriverConfigurations", "Aero");
 
                     b.HasData(
                         new
@@ -294,7 +295,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("ElevatorAccessLevelSpecifications");
+                    b.ToTable("ElevatorAccessLevelSpecifications", "Aero");
 
                     b.HasData(
                         new
@@ -351,7 +352,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("InputPointSpecifications");
+                    b.ToTable("InputPointSpecifications", "Aero");
 
                     b.HasData(
                         new
@@ -396,7 +397,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Scps");
+                    b.ToTable("Scps", "Aero");
                 });
 
             modelBuilder.Entity("AeroAdapter.Infrastructure.Persistences.Entities.ScpDeviceSpecification", b =>
@@ -480,7 +481,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("ScpDeviceSpecifications");
+                    b.ToTable("ScpDeviceSpecifications", "Aero");
 
                     b.HasData(
                         new
@@ -577,7 +578,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("SioPanelConfigurations");
+                    b.ToTable("SioPanelConfigurations", "Aero");
 
                     b.HasData(
                         new
@@ -644,7 +645,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("SystemLevelSpecifications");
+                    b.ToTable("SystemLevelSpecifications", "Aero");
 
                     b.HasData(
                         new
@@ -720,7 +721,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("WriterAudits");
+                    b.ToTable("WriterAudits", "Aero");
                 });
 #pragma warning restore 612, 618
         }

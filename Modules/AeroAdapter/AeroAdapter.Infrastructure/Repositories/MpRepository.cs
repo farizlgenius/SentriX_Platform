@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AeroAdapter.Infrastructure.Repositories;
 
-public sealed class MpRepository(AppDbContext context) : IMpRepository
+public sealed class MpRepository(AeroDbContext context) : IMpRepository
 {
       public async Task<InputPointSpecification> GetInputPointSpecificationByIdAndMacAndSioNumber(short ScpId, string Mac, short SioNumber)
       {

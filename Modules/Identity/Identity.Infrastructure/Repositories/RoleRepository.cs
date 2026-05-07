@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Infrastructure.Repositories;
 
-public class RoleRepository(AppDbContext context) : IRoleRepository
+public class RoleRepository(IdentityDbContext context) : IRoleRepository
 {
   public async Task<RoleDto> AddAsync(Role domain)
   {

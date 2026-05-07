@@ -11,15 +11,16 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AeroAdapter.Infrastructure.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
-    [Migration("20260429151136_EditScpTable")]
-    partial class EditScpTable
+    [DbContext(typeof(AeroDbContext))]
+    [Migration("20260507062622_InitialDb2")]
+    partial class InitialDb2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("Aero")
                 .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -106,7 +107,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("AccessDatabaseSpecifications");
+                    b.ToTable("AccessDatabaseSpecifications", "Aero");
 
                     b.HasData(
                         new
@@ -181,7 +182,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("CreateChannels");
+                    b.ToTable("CreateChannels", "Aero");
 
                     b.HasData(
                         new
@@ -245,7 +246,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("DriverConfigurations");
+                    b.ToTable("DriverConfigurations", "Aero");
 
                     b.HasData(
                         new
@@ -297,7 +298,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("ElevatorAccessLevelSpecifications");
+                    b.ToTable("ElevatorAccessLevelSpecifications", "Aero");
 
                     b.HasData(
                         new
@@ -354,7 +355,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("InputPointSpecifications");
+                    b.ToTable("InputPointSpecifications", "Aero");
 
                     b.HasData(
                         new
@@ -385,36 +386,12 @@ namespace AeroAdapter.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
-                    b.Property<string>("fw")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ip")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("mac")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("port")
-                        .HasColumnType("integer");
-
                     b.Property<short>("scp_id")
                         .HasColumnType("smallint");
-
-                    b.Property<string>("serial_number")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("sync_status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("synced_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
@@ -423,7 +400,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Scps");
+                    b.ToTable("Scps", "Aero");
                 });
 
             modelBuilder.Entity("AeroAdapter.Infrastructure.Persistences.Entities.ScpDeviceSpecification", b =>
@@ -507,7 +484,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("ScpDeviceSpecifications");
+                    b.ToTable("ScpDeviceSpecifications", "Aero");
 
                     b.HasData(
                         new
@@ -604,7 +581,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("SioPanelConfigurations");
+                    b.ToTable("SioPanelConfigurations", "Aero");
 
                     b.HasData(
                         new
@@ -671,7 +648,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("SystemLevelSpecifications");
+                    b.ToTable("SystemLevelSpecifications", "Aero");
 
                     b.HasData(
                         new
@@ -747,7 +724,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("WriterAudits");
+                    b.ToTable("WriterAudits", "Aero");
                 });
 #pragma warning restore 612, 618
         }

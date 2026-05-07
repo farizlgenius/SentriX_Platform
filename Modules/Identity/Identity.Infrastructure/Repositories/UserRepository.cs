@@ -5,12 +5,11 @@ using Identity.Domain.Constants;
 using Identity.Domain.Entities;
 using Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using SentriX.Modules.Identity.Identity.Application.Interfaces;
 
 
 namespace Identity.Infrastructure.Repositories;
 
-public sealed class OperatorRepository(AppDbContext context) : IOperatorRepository
+public sealed class OperatorRepository(IdentityDbContext context) : IOperatorRepository
 {
   public async Task<OperatorDto> AddAsync(Operator domain)
   {

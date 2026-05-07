@@ -7,13 +7,17 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AeroAdapter.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDb : Migration
+    public partial class InitialDb2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "Aero");
+
             migrationBuilder.CreateTable(
                 name: "AccessDatabaseSpecifications",
+                schema: "Aero",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -48,6 +52,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "CreateChannels",
+                schema: "Aero",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -70,6 +75,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "DriverConfigurations",
+                schema: "Aero",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -92,6 +98,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "ElevatorAccessLevelSpecifications",
+                schema: "Aero",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -110,6 +117,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "InputPointSpecifications",
+                schema: "Aero",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -131,6 +139,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "ScpDeviceSpecifications",
+                schema: "Aero",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -165,17 +174,13 @@ namespace AeroAdapter.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Scps",
+                schema: "Aero",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     scp_id = table.Column<short>(type: "smallint", nullable: false),
                     mac = table.Column<string>(type: "text", nullable: false),
-                    ip = table.Column<string>(type: "text", nullable: false),
-                    port = table.Column<int>(type: "integer", nullable: false),
-                    fw = table.Column<string>(type: "text", nullable: false),
-                    synced_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
-                    sync_status = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'")
                 },
@@ -186,6 +191,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "SioPanelConfigurations",
+                schema: "Aero",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -215,6 +221,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "SystemLevelSpecifications",
+                schema: "Aero",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -236,6 +243,7 @@ namespace AeroAdapter.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "WriterAudits",
+                schema: "Aero",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -260,41 +268,49 @@ namespace AeroAdapter.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "Aero",
                 table: "AccessDatabaseSpecifications",
                 columns: new[] { "id", "b_act_date", "b_apb_location", "b_asset_group", "b_deact_date", "b_issue_code", "b_support_time_apb", "b_upgrade_date", "b_use_limit", "b_user_level", "b_vacation_date", "mac", "n_alvl", "n_alvl_use4arg", "n_card", "n_escort_timeout", "n_host_response_timeout", "n_multi_card_timeout", "n_pin_digits", "n_tz", "scp_id" },
                 values: new object[] { 1, (short)2, (short)1, (short)0, (short)2, (short)1, (short)1, (short)1, (short)1, (short)7, (short)1, "", (short)8, (short)0, (short)1000, (short)15, (short)5, (short)15, (short)324, (short)64, (short)0 });
 
             migrationBuilder.InsertData(
+                schema: "Aero",
                 table: "CreateChannels",
                 columns: new[] { "id", "baudrate", "c_model_id", "c_port", "c_rts_mode", "c_type", "n_channel_id", "timer_1", "timer_2" },
                 values: new object[] { 1, (short)0, (short)0, (short)0, (short)0, (short)7, (short)1, (short)3000, (short)0 });
 
             migrationBuilder.InsertData(
+                schema: "Aero",
                 table: "DriverConfigurations",
                 columns: new[] { "id", "baudrate", "mac", "msp1_number", "n_dialect", "n_protocol", "port_number", "reply_time", "scp_id" },
                 values: new object[] { 1, (short)-1, "", (short)0, (short)0, (short)0, (short)3, (short)0, (short)0 });
 
             migrationBuilder.InsertData(
+                schema: "Aero",
                 table: "ElevatorAccessLevelSpecifications",
                 columns: new[] { "id", "mac", "max_ealvl", "max_floors", "scp_id" },
                 values: new object[] { 1, "", (short)256, (short)128, (short)0 });
 
             migrationBuilder.InsertData(
+                schema: "Aero",
                 table: "InputPointSpecifications",
                 columns: new[] { "id", "debounce", "hold_time", "icvt_num", "input_number", "mac", "scp_id", "sio_number" },
                 values: new object[] { 1, (short)2, (short)5, (short)0, (short)0, "", (short)0, (short)0 });
 
             migrationBuilder.InsertData(
+                schema: "Aero",
                 table: "ScpDeviceSpecifications",
                 columns: new[] { "id", "gmt_offset", "mac", "n_acr", "n_alvl", "n_cp", "n_dst_id", "n_hol", "n_language", "n_mp", "n_mpg", "n_msp1_port", "n_oper_mode", "n_proc", "n_sio", "n_tran_limit", "n_transcations", "n_trgr", "n_tz", "oper_type", "scp_id" },
                 values: new object[] { 1, (short)-25200, "", (short)64, (short)32000, (short)388, (short)0, (short)255, (short)0, (short)615, (short)128, (short)3, (short)0, (short)1024, (short)33, 60000, 60000, (short)1024, (short)255, (short)1, (short)0 });
 
             migrationBuilder.InsertData(
+                schema: "Aero",
                 table: "SioPanelConfigurations",
                 columns: new[] { "id", "address", "emax", "enable", "flags", "mac", "model", "n_inputs", "n_outputs", "n_readers", "n_sio_next_in", "n_sio_next_out", "n_sio_next_rdr", "port", "scp_id", "sio_number" },
                 values: new object[] { 1, (short)0, (short)3, (short)1, (short)0, "", (short)196, (short)7, (short)4, (short)4, (short)-1, (short)-1, (short)-1, (short)0, (short)0, (short)0 });
 
             migrationBuilder.InsertData(
+                schema: "Aero",
                 table: "SystemLevelSpecifications",
                 columns: new[] { "id", "b_direct_mode", "debug_rq", "n_debug_arg", "n_holidays", "n_ports", "n_scps", "n_timezones" },
                 values: new object[] { 1, (short)1, (short)0, (short)0, (short)0, (short)1024, (short)1024, (short)0 });
@@ -304,34 +320,44 @@ namespace AeroAdapter.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AccessDatabaseSpecifications");
+                name: "AccessDatabaseSpecifications",
+                schema: "Aero");
 
             migrationBuilder.DropTable(
-                name: "CreateChannels");
+                name: "CreateChannels",
+                schema: "Aero");
 
             migrationBuilder.DropTable(
-                name: "DriverConfigurations");
+                name: "DriverConfigurations",
+                schema: "Aero");
 
             migrationBuilder.DropTable(
-                name: "ElevatorAccessLevelSpecifications");
+                name: "ElevatorAccessLevelSpecifications",
+                schema: "Aero");
 
             migrationBuilder.DropTable(
-                name: "InputPointSpecifications");
+                name: "InputPointSpecifications",
+                schema: "Aero");
 
             migrationBuilder.DropTable(
-                name: "ScpDeviceSpecifications");
+                name: "ScpDeviceSpecifications",
+                schema: "Aero");
 
             migrationBuilder.DropTable(
-                name: "Scps");
+                name: "Scps",
+                schema: "Aero");
 
             migrationBuilder.DropTable(
-                name: "SioPanelConfigurations");
+                name: "SioPanelConfigurations",
+                schema: "Aero");
 
             migrationBuilder.DropTable(
-                name: "SystemLevelSpecifications");
+                name: "SystemLevelSpecifications",
+                schema: "Aero");
 
             migrationBuilder.DropTable(
-                name: "WriterAudits");
+                name: "WriterAudits",
+                schema: "Aero");
         }
     }
 }

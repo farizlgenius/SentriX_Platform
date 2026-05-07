@@ -1,7 +1,6 @@
 using System;
 using Identity.Domain.Constants;
 using SentriX.BuildingBlock.Exceptions;
-using SentriX.Modules.Identity.Identity.Application.Interfaces;
 
 using Identity.Contract.Interfaces;
 using Identity.Application.Interfaces;

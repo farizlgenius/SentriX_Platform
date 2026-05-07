@@ -5,12 +5,12 @@ using Identity.Domain.Constants;
 using Identity.Domain.Entities;
 using Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using SentriX.Modules.Identity.Identity.Application.Interfaces;
+
 
 
 namespace Identity.Infrastructure.Repositories;
 
-public class DepartmentRepository(AppDbContext context) : IDepartmentRepository
+public class DepartmentRepository(IdentityDbContext context) : IDepartmentRepository
 {
   public async Task<DepartmentDto> AddAsync(Department domain)
   {

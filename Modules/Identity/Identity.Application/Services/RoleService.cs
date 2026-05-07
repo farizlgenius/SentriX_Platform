@@ -2,8 +2,6 @@
 using Identity.Domain.Constants;
 using Identity.Domain.Entities;
 using SentriX.BuildingBlock.Exceptions;
-using SentriX.Modules.Identity.Identity.Application.Interfaces;
-
 using Identity.Contract.Interfaces;
 using Identity.Application.Interfaces;
 using Identity.Contract.DTOs;

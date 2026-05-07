@@ -1,17 +1,27 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace AeroAdapter.Infrastructure.Persistences;
 
-public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+public class AeroDbContextFactory : IDesignTimeDbContextFactory<AeroDbContext>
 {
-    public AppDbContext CreateDbContext(string[] args)
+    public AeroDbContext CreateDbContext(string[] args)
     {
-        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+        // VERY IMPORTANT: move up to API project folder
+    var basePath = Directory.GetCurrentDirectory();
 
-        optionsBuilder.UseNpgsql("Host=127.0.0.1;Port=5432;Database=SentriXAero;Username=postgres;Password=password;");
+    var config = new ConfigurationBuilder()
+        .SetBasePath(basePath)
+        .AddJsonFile("appsettings.json")
+        .Build();
 
-        return new AppDbContext(optionsBuilder.Options);
+    var connectionString = config.GetConnectionString("PostgresConnection");
+
+    var optionsBuilder = new DbContextOptionsBuilder<AeroDbContext>();
+    optionsBuilder.UseNpgsql(connectionString);
+
+    return new AeroDbContext(optionsBuilder.Options);
     }
 }

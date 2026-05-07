@@ -8,7 +8,7 @@ using Identity.Contract.DTOs;
 
 namespace SentriX.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/identity/[controller]")]
     [ApiController]
     [Authorize]
     public class LocationController(ILocationService service) : ControllerBase

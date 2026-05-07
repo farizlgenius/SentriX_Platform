@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Infrastructure.Repositories;
 
-public sealed class SettingRepository(AppDbContext context) : ISettingRepository
+public sealed class SettingRepository(IdentityDbContext context) : ISettingRepository
 {
       public async Task<PasswordRuleDto> CreatePasswordRuleAsync(Identity.Domain.Entities.PasswordRule dto)
       {

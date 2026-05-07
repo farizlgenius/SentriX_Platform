@@ -10,7 +10,7 @@ using SentriX.BuildingBlock.Exceptions;
 
 namespace Identity.Infrastructure.Repositories;
 
-public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
+public sealed class CompanyRepository(IdentityDbContext context) : ICompanyRepository
 {
       public async Task<CompanyDto> AddAsync(Company domain)
       {

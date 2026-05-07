@@ -4,7 +4,26 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <RuntimeIdentifiers>win-x64;linux-arm64</RuntimeIdentifiers>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	</PropertyGroup>
+
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+  <None Include="..\Modules\AeroAdapter\AeroAdapter.Infrastructure\Libs\Windows\**\*">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <TargetPath>%(Filename)%(Extension)</TargetPath>
+  </None>
+</ItemGroup>
+
+<ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
+  <None Include="..\Modules\AeroAdapter\AeroAdapter.Infrastructure\Libs\Linux\**\*">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <TargetPath>%(Filename)%(Extension)</TargetPath>
+  </None>
+</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.25" />
@@ -14,12 +33,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authentication/" />
     <Folder Include="Middlewares/" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Modules\AeroAdapter\AeroAdapter.Contract\AeroAdapter.Contract.csproj" />
+    <ProjectReference Include="..\Modules\AeroAdapter\AeroAdapter.Infrastructure\AeroAdapter.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\AmicoAdapter\AmicoAdapter.Contract\AmicoAdapter.Contract.csproj" />
     <ProjectReference Include="..\Modules\Core\Core.Contract\Core.Contract.csproj" />
     <ProjectReference Include="..\Modules\Identity\Identity.Contract\Identity.Contract.csproj" />

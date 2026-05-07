@@ -7,7 +7,7 @@ using Identity.Application.Interfaces;
 
 namespace Identity.Infrastructure.Repositories;
 
-public sealed class ApiKeyRepository(AppDbContext context) : IApiKeyRepository
+public sealed class ApiKeyRepository(IdentityDbContext context) : IApiKeyRepository
 {
   public async Task<ApiKeyDto> ValidateApiKeyAsync(string apiKey)
   {

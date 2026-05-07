@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AeroAdapter.Infrastructure.Repositories;
 
-public sealed class ScpRepository(AppDbContext context) : IScpRepository
+public sealed class ScpRepository(AeroDbContext context) : IScpRepository
 {
       public async Task<bool> AddAsync(short ScpId,string Mac)
       {

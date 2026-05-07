@@ -7,7 +7,7 @@ using Identity.Application.Interfaces;
 
 namespace Identity.Infrastructure.Repositories;
 
-public class RefreshTokenAuditRepository(AppDbContext context) : IRefreshTokenAuditRepository
+public class RefreshTokenAuditRepository(IdentityDbContext context) : IRefreshTokenAuditRepository
 {
   public async Task AddAsync(string username, string hashedRefreshToken, string action, DateTime expiredAt)
   {

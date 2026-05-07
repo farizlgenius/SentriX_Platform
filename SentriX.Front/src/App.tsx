@@ -151,6 +151,9 @@ export default function App() {
       return;
     }
 
+    if(!token)
+        return;
+
     // ⭐ ensure connection is started
     await SignalRService.startConnection();
 

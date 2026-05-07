@@ -6,9 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AeroAdapter.Infrastructure.Persistences;
 
-public sealed class AppDbContext : DbContext
+public sealed class AeroDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){}
+    public const string Schema = "Aero";
+    public AeroDbContext(DbContextOptions<AeroDbContext> options) : base(options){}
     public DbSet<SystemLevelSpecification> SystemLevelSpecifications {get; set;}
     public DbSet<CreateChannel> CreateChannels {get; set;}
     public DbSet<Scp> Scps {get; set;}
@@ -23,6 +24,8 @@ public sealed class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.HasDefaultSchema(Schema);
 
         // Global Enum to string
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
